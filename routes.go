@@ -7,7 +7,9 @@ import (
 
 
 func registerRoutes(engine *gin.Engine)  {
-	adm := engine.Group("/admin")
-	adm.GET("/index", admin.Index)
-	adm.Any("/index/login", admin.IndexLogin)
+	adminG := engine.Group("/admin")
+
+	adminG.GET("/index", admin.Index)
+	adminG.GET("/index/login", admin.IndexLogin)
+	adminG.POST("/index/login", admin.IndexLogin)
 }

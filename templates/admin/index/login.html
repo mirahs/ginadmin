@@ -4,11 +4,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后! -->
+    <!-- 上面3个meta标签必须放在最前面 -->
 
     <title>登录《ginadmin》管理中心</title>
+
     <link rel="stylesheet" href="/static/layui/css/layui.css">
-    <link rel="stylesheet" href="/static/css/login.css">
+
+    <style type="text/css">
+        .login-main {
+            margin: 0 auto;
+            width: 350px;
+        }
+
+        .login-main header {
+            margin-top: 150px;
+            margin-bottom: 15px;
+
+            height: 35px;
+            line-height: 35px;
+            font-size: 30px;
+            font-weight: 100;
+            text-align: center;
+        }
+    </style>
 
     <script type="text/javascript">
         if (self.parent.frames.length !== 0) self.parent.location = document.location;
@@ -18,16 +36,17 @@
 
 <div class="login-main">
     <header class="layui-elip">登录</header>
+
     <form class="layui-form">
-        <div class="layui-input-inline">
-            <input type="text" name="account" lay-verify="required" placeholder="账号" autocomplete="off" class="layui-input">
+        <div class="layui-form-item">
+            <input type="text" name="account" lay-verify="required" autocomplete="off" placeholder="账号" class="layui-input">
         </div>
-        <div class="layui-input-inline">
-            <input type="password" name="password" lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
+        <div class="layui-form-item">
+            <input type="password" name="password" lay-verify="required" autocomplete="off" placeholder="密码" class="layui-input">
         </div>
 
-        <div class="layui-input-inline login-btn">
-            <button lay-submit lay-filter="btnLogin" class="layui-btn">登录</button>
+        <div class="layui-form-item">
+            <button lay-submit lay-filter="btnLogin" class="layui-btn layui-btn-fluid">登录</button>
         </div>
     </form>
 </div>
@@ -37,26 +56,27 @@
 <script src="/static/js/md5.js"></script>
 <script src="/static/layui/layui.js"></script>
 <script type="text/javascript">
-    layui.use(['layer', 'form', 'jquery'], function() {
+    layui.use(['layer', 'form', 'jquery'], function () {
         const form = layui.form;
         const $ = layui.jquery;
 
 
-        form.on('submit(btnLogin)', function(obj) {
+        form.on('submit(btnLogin)', function (obj) {
             const data = obj.field;
             data['password'] = hex_md5(data['password']);
 
             request($, 'login', data, function (res, xhr) {
                 if (xhr) {
-                    console.log("返回响应信息:", xhr.responseText);
-                    layer.msg("网络繁忙, 访问失败");
+                    console.error("返回错误:", xhr.responseText);
+                    layer.alert("网络错误");
                     return;
                 }
+
                 res = JSON.parse(res);
                 if (res.code === 1) {
-                    location.href = "index";
-                }else{
-                    layer.msg(res.msg);
+                    location.href = "/index";
+                } else {
+                    layer.alert(res.msg);
                 }
             }, 'post');
 

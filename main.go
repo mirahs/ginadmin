@@ -1,14 +1,15 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run()
+	engine := gin.Default()
+	engine.StaticFS("/static", http.Dir("./static"))
+	engine.LoadHTMLGlob("template/**/**/*")
+	registerRoutes(engine)
+	panic(engine.Run())
 }

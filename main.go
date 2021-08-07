@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ginadmin/pongo2gin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -8,8 +9,12 @@ import (
 
 func main() {
 	engine := gin.Default()
+
+	engine.HTMLRender = pongo2gin.Default()
+
 	engine.StaticFS("/static", http.Dir("./static"))
-	engine.LoadHTMLGlob("template/**/**/*")
+
 	registerRoutes(engine)
+
 	panic(engine.Run())
 }

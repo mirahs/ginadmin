@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后! -->
+
+    <title>《ginadmin》管理中心</title>
+    <!-- <link rel="icon" href="/static/favicon.ico"> -->
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+
+    <style type="text/css">
+        .layui-layout-admin .layui-right-head { position: fixed; left: 200px; right: 0; top: 60px; bottom: 0; height: 32px; line-height: 32px; padding: 0 10px; background-color: #eee; }
+    </style>
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">ginadmin</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul id="menu_header" class="layui-nav layui-layout-left">
+            {% for menu in menus %}
+            <li class="layui-nav-item">
+                <a href="javascript:" id="header_{{ menu.Code }}" onclick="toggleHeader('{{ menu.Code }}');">{{ menu.Name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <p>您好, {{ user_type_name }} <em>{{ account }}</em></p>
+            </li>
+            <li class="layui-nav-item"><a href="logout">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            {% for menu in menus %}
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul id="sidebar_{{ menu.Code }}" style="display: none" class="layui-nav layui-nav-tree">
+                {% for menuSub in menu.Data %}
+                {% if menuSub.Code %}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:" onclick="clickItem('{{ menuSub.Name }}', '{{ menuSub.Url }}', '{{ menu.Name }}');">{{ menuSub.Name }}</a>
+                </li>
+                {% else %}
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:">{{ menuSub.Name }}</a>
+                    {% for menuSubSub in menuSub.Data %}
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:" onclick="clickItem('{{ menuSubSub.Name }}', '{{ menuSubSub.Url }}', '{{ menu.Name }}');">{{ menuSubSub.Name }}</a></dd>
+                    </dl>
+                    {% endfor %}
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="layui-right-head">
+        <!-- 顶部固定区域 -->
+        <!-- © layui.com - 顶部固定区域 -->
+        <p id="title_nav"></p>
+    </div>
+
+    <div class="layui-body" style="top: 92px; overflow: hidden;">
+        <!-- 内容主体区域 -->
+        <iframe id="main" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+
+    <!--    <div class="layui-footer">-->
+    <!--        <!-- 底部固定区域 -->-->
+    <!--        <!-- © layui.com - 底部固定区域 -->-->
+    <!--        <p>京公网安备11000002000001号</p>-->
+    <!--    </div>-->
+</div>
+
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use('element', function () { });
+
+
+    // 显示标题
+    function showTitle(title, titleSub) {
+        document.title = titleSub + ' - ' + title + ' - 《ginadmin》管理中心';
+        $('#title_nav').html(title + '&nbsp;&raquo;&nbsp;' + titleSub);
+    }
+
+    // 点击顶部菜单
+    function toggleHeader(key) {
+        showSideBar(key);
+    }
+
+    // 显示左侧菜单
+    function showSideBar(headerKey) {
+        // 隐藏所有左侧菜单
+        $('.layui-nav-tree').each(function() {
+            $(this).css('display', 'none');
+        });
+        // 显示被点击顶部的左侧菜单
+        $('#sidebar_' + headerKey).css('display', '');
+
+        // 点击左侧菜单第一个链接
+        const firstSideBar = $('#sidebar_' + headerKey + '>li:first');
+
+        const item = firstSideBar.is(':has(dl)') ? firstSideBar.find('dl>dd>a:first') : firstSideBar.children('li>a:first');
+        item.addClass('layui-this');
+        item.click();
+    }
+
+    function clickItem(name, url, headerName) {
+        showTitle(headerName, name);
+        $('#main').attr('src', url);
+    }
+
+    function init() {
+        // 顶部第一个菜单
+        const firstHeader = $('#menu_header>li>a:first');
+        firstHeader.parent().addClass('layui-this');
+
+        // 显示顶部菜单的左侧菜单
+        const firstHeaderKey = firstHeader.attr('id').substr('header_'.length);
+        showSideBar(firstHeaderKey);
+    }
+
+
+    init();
+</script>
+
+</body>
+</html>

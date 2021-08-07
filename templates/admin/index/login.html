@@ -53,7 +53,6 @@
 
 
 <script src="/static/js/app.js"></script>
-<script src="/static/js/md5.js"></script>
 <script src="/static/layui/layui.js"></script>
 <script type="text/javascript">
     layui.use(['layer', 'form', 'jquery'], function () {
@@ -63,7 +62,6 @@
 
         form.on('submit(btnLogin)', function (obj) {
             const data = obj.field;
-            data['password'] = hex_md5(data['password']);
 
             request($, 'login', data, function (res, xhr) {
                 if (xhr) {
@@ -74,7 +72,7 @@
 
                 res = JSON.parse(res);
                 if (res.code === 1) {
-                    location.href = "/index";
+                    location.href = "index";
                 } else {
                     layer.alert(res.msg);
                 }

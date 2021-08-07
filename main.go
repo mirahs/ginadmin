@@ -14,7 +14,7 @@ func main() {
 
 	engine.StaticFS("/static", http.Dir("./static"))
 
-	registerRoutes(engine)
+	initRoutes(engine)
 
 	panic(engine.Run())
 }

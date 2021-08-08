@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"encoding/json"
+	"ginadmin/model"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -18,11 +20,16 @@ func AdminValidate() gin.HandlerFunc {
 		}
 
 		session := sessions.Default(ctx)
-		if isLogin := session.Get("isLogin"); isLogin == nil || !isLogin.(bool) {
+		admUserJsonStr := session.Get("user")
+		if admUserJsonStr == nil {
 			ctx.Redirect(http.StatusFound, urlLogin)
 			ctx.Abort()
 			return
 		}
+
+		var admUser model.AdmUser
+		json.Unmarshal([]byte(admUserJsonStr.(string)), &admUser)
+		ctx.Set("user", admUser)
 
 		ctx.Next()
 	}

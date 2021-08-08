@@ -12,9 +12,7 @@ func main() {
 	common.DbInit()
 
 	engine := gin.Default()
-
 	engine.HTMLRender = pongo2gin.Default()
-
 	engine.StaticFS("/static", http.Dir("./static"))
 
 	initRoutes(engine)

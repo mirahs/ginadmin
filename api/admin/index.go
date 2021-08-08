@@ -1,7 +1,11 @@
 package admin
 
 import (
+	"encoding/json"
+	"ginadmin/common"
 	"ginadmin/menu"
+	"ginadmin/model"
+	"ginadmin/util"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -10,8 +14,10 @@ import (
 
 
 func Index(ctx *gin.Context)  {
+	user := ctx.MustGet("user").(model.AdmUser)
+
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
-		"account": "mirahs",
+		"account": user.Account,
 		"user_type_name": "管理员",
 		"menus": menu.Menus(),
 	})
@@ -21,18 +27,36 @@ func IndexLogin(ctx *gin.Context)  {
 	if ctx.Request.Method == "POST" {
 		account := ctx.DefaultPostForm("account", "")
 		password:= ctx.DefaultPostForm("password", "")
-		if account == "admin" && password == "admin" {
-			session := sessions.Default(ctx)
-			session.Set("isLogin", true)
-			session.Save()
 
-			ctx.JSON(http.StatusOK, gin.H{"code": 1})
-		} else {
-			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": "账号或密码错误"})
+		if account == "" || password == "" {
+			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": "账号和密码不能为空"})
+			return
 		}
+
+		var admUser = model.AdmUser{}
+		common.Db.Find(&admUser, "`account`=?", account)
+		if admUser.ID == 0 {
+			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": "账号不存在"})
+			return
+		}
+
+		passwordMd5 := util.Md5(password)
+		if passwordMd5 != admUser.Password {
+			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": "密码错误"})
+			return
+		}
+
+		// session不能序列化struct(不认定), 只能转换成json字符串
+		admUserJsonBytes, _ := json.Marshal(admUser)
+
+		session := sessions.Default(ctx)
+		session.Set("user", string(admUserJsonBytes))
+		session.Save()
+
+		ctx.JSON(http.StatusOK, gin.H{"code": 1})
 	} else {
 		session := sessions.Default(ctx)
-		if isLogin := session.Get("isLogin"); isLogin != nil && isLogin.(bool) {
+		if user := session.Get("user"); user != nil {
 			ctx.Redirect(http.StatusFound, "index")
 			return
 		}

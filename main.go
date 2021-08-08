@@ -2,7 +2,7 @@ package main
 
 import (
 	"ginadmin/common"
-	"ginadmin/pongo2gin"
+	"ginadmin/thirdparty/pongo2gin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

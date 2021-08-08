@@ -10,11 +10,6 @@ import (
 
 
 func Index(ctx *gin.Context)  {
-	session := sessions.Default(ctx)
-	if isLogin := session.Get("isLogin"); isLogin == nil || !isLogin.(bool) {
-		ctx.Redirect(http.StatusMovedPermanently, "login")
-		return
-	}
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
 		"account": "mirahs",
 		"user_type_name": "管理员",
@@ -38,7 +33,7 @@ func IndexLogin(ctx *gin.Context)  {
 	} else {
 		session := sessions.Default(ctx)
 		if isLogin := session.Get("isLogin"); isLogin != nil && isLogin.(bool) {
-			ctx.Redirect(http.StatusMovedPermanently, "index")
+			ctx.Redirect(http.StatusFound, "index")
 			return
 		}
 		ctx.HTML(http.StatusOK, "admin/index/login.html", pongo2.Context{})
@@ -50,5 +45,5 @@ func IndexLogout(ctx *gin.Context) {
 	session.Clear()
 	session.Save()
 
-	ctx.Redirect(http.StatusMovedPermanently, "login")
+	ctx.Redirect(http.StatusFound, "login")
 }

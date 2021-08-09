@@ -2,8 +2,7 @@ package admin
 
 import (
 	"encoding/json"
-	"ginadmin/common"
-	"ginadmin/menu"
+	"ginadmin/config/menu"
 	"ginadmin/model"
 	"ginadmin/util"
 	"github.com/flosch/pongo2/v4"
@@ -17,9 +16,9 @@ func Index(ctx *gin.Context)  {
 	user := ctx.MustGet("user").(model.AdmUser)
 
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
-		"account": user.Account,
+		"account":        user.Account,
 		"user_type_name": "管理员",
-		"menus": menu.Menus(),
+		"menus":          menu.Menus(),
 	})
 }
 
@@ -34,7 +33,7 @@ func IndexLogin(ctx *gin.Context)  {
 		}
 
 		var admUser = model.AdmUser{}
-		common.Db.Find(&admUser, "`account`=?", account)
+		model.Db.Find(&admUser, "`account`=?", account)
 		if admUser.ID == 0 {
 			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": "账号不存在"})
 			return

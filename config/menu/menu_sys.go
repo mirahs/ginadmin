@@ -15,7 +15,7 @@ func menuSys() *Menu {
 			},
 			&MenuSub{
 				Name: "管理员管理",
-				Data: []*MenuItem {
+				Data: []*MenuItem{
 					&MenuItem{
 						Code: "master_new",
 						Name: "添加管理员",
@@ -32,7 +32,7 @@ func menuSys() *Menu {
 			},
 			&MenuSub{
 				Name: "日志",
-				Data: []*MenuItem {
+				Data: []*MenuItem{
 					&MenuItem{
 						Code: "log_login",
 						Name: "登录日志",

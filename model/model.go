@@ -1,7 +1,6 @@
-package common
+package model
 
 import (
-	"ginadmin/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -18,14 +17,14 @@ func DbInit() {
 	}
 	Db = db
 
-	hasAdmUser := Db.Migrator().HasTable(&model.AdmUser{})
+	hasAdmUser := Db.Migrator().HasTable(&AdmUser{})
 
-	err = Db.AutoMigrate(&model.AdmUser{}, &model.LogAdmUserLogin{})
+	err = Db.AutoMigrate(&AdmUser{}, &LogAdmUserLogin{})
 	if err != nil {
 		panic("db.DbInit AutoMigrate err:" + err.Error())
 	}
 
 	if !hasAdmUser {
-		Db.Create(&model.AdmUser{Account: "admin", Password: "21232f297a57a5a743894a0e4a801fc3", Type: 10, Remark: "admin"})
+		Db.Create(&AdmUser{Account: "admin", Password: "21232f297a57a5a743894a0e4a801fc3", Type: 10, Remark: "admin"})
 	}
 }

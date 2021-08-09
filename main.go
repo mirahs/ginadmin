@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ginadmin/common"
+	"ginadmin/model"
 	"ginadmin/thirdparty/pongo2gin"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -9,7 +9,7 @@ import (
 
 
 func main() {
-	common.DbInit()
+	model.DbInit()
 
 	engine := gin.Default()
 	engine.HTMLRender = pongo2gin.Default()

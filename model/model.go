@@ -10,12 +10,12 @@ var Db *gorm.DB
 
 
 func DbInit() {
+	var err error
 	dsn := "root:root@tcp(127.0.0.1:3306)/ginadmin?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("db.DbInit Open err:" + err.Error())
 	}
-	Db = db
 
 	hasAdmUser := Db.Migrator().HasTable(&AdmUser{})
 

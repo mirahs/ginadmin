@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"ginadmin/repository"
+	"ginadmin/thirdparty/ip2region"
 	"ginadmin/util"
 	"ginadmin/vm"
 	"github.com/gin-contrib/sessions"
@@ -27,17 +28,26 @@ func (i *Index) Login(ctx *gin.Context) (err error)  {
 		return
 	}
 
+	ip := ctx.ClientIP()
+	address := ip2region.GetAddress(ip)
+
+	var remark string
 	repoAdmUser := repository.NewAdmUserRepository()
+	repoLogAdmUserLogin := repository.NewLogAdmUserLoginRepository()
 
 	admUser := repoAdmUser.GetByAccount(vmAdmUser.Account)
 	if admUser.ID == 0 {
-		err = errors.New("账号不存在")
+		remark = "账号不存在"
+		err = errors.New(remark)
+		repoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)
 		return
 	}
 
 	passwordMd5 := util.Md5(vmAdmUser.Password)
 	if passwordMd5 != admUser.Password {
-		err = errors.New("密码错误")
+		remark = "密码错误"
+		err = errors.New(remark)
+		repoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)
 		return
 	}
 
@@ -47,6 +57,9 @@ func (i *Index) Login(ctx *gin.Context) (err error)  {
 	session := sessions.Default(ctx)
 	session.Set("user", string(admUserJsonBytes))
 	err = session.Save()
+
+	repoAdmUser.LoginUpdate(admUser, ip)
+	repoLogAdmUserLogin.AddSuccess(vmAdmUser.Account, ip, address, remark)
 
 	return
 }

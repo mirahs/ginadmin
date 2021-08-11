@@ -2,29 +2,29 @@ package admin
 
 import (
 	"ginadmin/config/menu"
-	"ginadmin/model"
 	"ginadmin/service/admin"
+	admin2 "ginadmin/util/admin"
 	"github.com/flosch/pongo2/v4"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 
-func Index(ctx *gin.Context)  {
-	user := ctx.MustGet("user").(model.AdmUser)
+var indexService = admin.NewIndexService()
 
+
+// 后台主页
+func Index(ctx *gin.Context)  {
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
-		"account":        user.Account,
+		"account":        admin2.GetAccount(ctx),
 		"user_type_name": "管理员",
 		"menus":          menu.Menus(),
 	})
 }
 
+// 后台登录
 func IndexLogin(ctx *gin.Context)  {
 	if ctx.Request.Method == "POST" {
-		indexService := admin.NewIndexService()
-
 		err := indexService.Login(ctx)
 		if err != nil {
 			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": err.Error()})
@@ -33,8 +33,7 @@ func IndexLogin(ctx *gin.Context)  {
 
 		ctx.JSON(http.StatusOK, gin.H{"code": 1})
 	} else {
-		session := sessions.Default(ctx)
-		if user := session.Get("user"); user != nil {
+		if admin2.LoginCheck(ctx) {
 			ctx.Redirect(http.StatusFound, "index")
 			return
 		}
@@ -42,10 +41,8 @@ func IndexLogin(ctx *gin.Context)  {
 	}
 }
 
+// 后台退出
 func IndexLogout(ctx *gin.Context) {
-	session := sessions.Default(ctx)
-	session.Clear()
-	session.Save()
-
+	indexService.Logout(ctx)
 	ctx.Redirect(http.StatusFound, "login")
 }

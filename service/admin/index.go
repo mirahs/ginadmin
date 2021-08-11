@@ -1,11 +1,11 @@
 package admin
 
 import (
-	"encoding/json"
 	"errors"
 	"ginadmin/repository"
 	"ginadmin/thirdparty/ip2region"
 	"ginadmin/util"
+	"ginadmin/util/admin"
 	"ginadmin/vm"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ import (
 type Index struct {}
 
 
-func (i *Index) Login(ctx *gin.Context) (err error)  {
+func (*Index) Login(ctx *gin.Context) (err error)  {
 	var vmAdmUser vm.AdmUserVm
 	err = ctx.ShouldBind(&vmAdmUser)
 	if err != nil {
@@ -51,17 +51,18 @@ func (i *Index) Login(ctx *gin.Context) (err error)  {
 		return
 	}
 
-	// session不能序列化struct(不确定), 只能转换成json字符串
-	admUserJsonBytes, _ := json.Marshal(admUser)
-
-	session := sessions.Default(ctx)
-	session.Set("user", string(admUserJsonBytes))
-	err = session.Save()
+	admin.LoginSessionSet(ctx, admUser)
 
 	repoAdmUser.LoginUpdate(admUser, ip)
 	repoLogAdmUserLogin.AddSuccess(vmAdmUser.Account, ip, address, remark)
 
 	return
+}
+
+func (*Index) Logout(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+	session.Clear()
+	_ = session.Save()
 }
 
 

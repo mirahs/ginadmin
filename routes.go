@@ -20,5 +20,8 @@ func initRoutes(engine *gin.Engine) {
 		adminG.GET("/index/logout", admin.IndexLogout)
 
 		adminG.GET("/home/welcome", admin.HomeWelcome)
+
+		adminG.GET("/sys/password", admin.SysPassword)
+		adminG.POST("/sys/password", admin.SysPassword)
 	}
 }

@@ -10,7 +10,7 @@ func menuSys() *Menu {
 			&MenuItem{
 				Code: "password",
 				Name: "密码更新",
-				Url: "/sys/password",
+				Url: "/admin/sys/password",
 				Key: []int{10, 20},
 			},
 			&MenuSub{
@@ -19,13 +19,13 @@ func menuSys() *Menu {
 					&MenuItem{
 						Code: "master_new",
 						Name: "添加管理员",
-						Url: "/sys/master_new",
+						Url: "/admin/sys/master_new",
 						Key: []int{10},
 					},
 					&MenuItem{
 						Code: "master_list",
 						Name: "管理员列表",
-						Url: "/sys/master_list",
+						Url: "/admin/sys/master_list",
 						Key: []int{10},
 					},
 				},
@@ -36,7 +36,7 @@ func menuSys() *Menu {
 					&MenuItem{
 						Code: "log_login",
 						Name: "登录日志",
-						Url: "/sys/log_login",
+						Url: "/admin/sys/log_login",
 						Key: []int{10},
 					},
 				},

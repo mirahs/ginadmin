@@ -10,7 +10,7 @@ func menuHome() *Menu {
 			&MenuItem{
 				Code: "welcome",
 				Name: "欢迎",
-				Url: "/home/welcome",
+				Url: "/admin/home/welcome",
 				Key: []int{10, 20},
 			},
 		},

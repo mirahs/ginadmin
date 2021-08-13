@@ -22,6 +22,11 @@ func (*AdmUser) LoginUpdate(admUser *model.AdmUser, ip string)  {
 	model.Db.Save(admUser)
 }
 
+func (*AdmUser) UpdatePassword(account, password string) {
+	var admUser model.AdmUser
+	model.Db.Model(admUser).Where("`account`=?", account).Update("password", password)
+}
+
 
 func NewAdmUserRepository() *AdmUser {
 	return &AdmUser{}

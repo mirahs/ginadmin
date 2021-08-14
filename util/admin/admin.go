@@ -3,7 +3,6 @@ package admin
 import (
 	"ginadmin/config"
 	"ginadmin/model"
-	"ginadmin/vm"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +28,7 @@ func GetAccountType(ctx *gin.Context) uint8 {
 func LoginSessionSet(ctx *gin.Context, admUser *model.AdmUser) {
 	session := sessions.Default(ctx)
 
-	session.Set(config.SessionId, admUser.ID)
+	session.Set(config.SessionId, admUser.Id)
 	session.Set(config.SessionAccount, admUser.Account)
 	session.Set(config.SessionType, admUser.Type)
 	session.Set(config.SessionIsLogin, true)
@@ -42,13 +41,4 @@ func LoginCheck(ctx *gin.Context) bool {
 	session := sessions.Default(ctx)
 	isLogin := session.Get(config.SessionIsLogin)
 	return isLogin != nil && isLogin.(bool)
-}
-
-
-func PageInfo(ctx *gin.Context) *vm.PageVm {
-	var pageVm vm.PageVm
-
-	_ = ctx.ShouldBind(&pageVm)
-
-	return &pageVm
 }

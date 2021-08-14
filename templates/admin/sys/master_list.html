@@ -23,7 +23,7 @@
             <td>{{ data.TypeDesc }}</td>
 
             <td>{{ data.LoginTimes }}</td>
-            <td>{% ymdhis data.LoginTime %}</td>
+            <td>{{ data.LoginTimeDesc }}</td>
             <td>{{ data.LoginIp }}</td>
             <td><a class="layui-btn layui-btn-normal layui-btn-xs" href="?act=lock&id={{ data.Id }}&is_locked={{ data.IsLocked }}">{{ data.IsLockedDesc }}</a></td>
             <td>{{ data.Remark }}</td>
@@ -44,7 +44,7 @@
 
 
 {% block body_js %}
-<script src="/static/js/app.js?xx"></script>
+<script src="/static/js/app.js"></script>
 <script src="/static/layui/layui.js"></script>
 <script type="text/javascript">
     layui.use(['laypage'], function () {

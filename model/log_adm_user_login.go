@@ -2,7 +2,7 @@ package model
 
 
 type LogAdmUserLogin struct {
-	ID uint32 `gorm:"auto_increment; comment:ID"`
+	ID uint32 `gorm:"auto_increment; comment:Id"`
 	Account string `gorm:"type:varchar(32); not null; comment:帐号"`
 	Time uint32 `gorm:"not null; comment:时间"`
 	Status uint8 `gorm:"not null; comment:状态 0:失败|1:成功"`

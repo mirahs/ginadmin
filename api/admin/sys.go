@@ -1,11 +1,7 @@
 package admin
 
 import (
-	"fmt"
-	"ginadmin/model"
 	admin2 "ginadmin/service/admin"
-	"ginadmin/util/admin"
-	"ginadmin/util/page"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -34,9 +30,10 @@ func SysPassword(ctx *gin.Context)  {
 }
 
 func SysMasterList(ctx *gin.Context) {
-	pageVm := admin.PageInfo(ctx)
+	pageInfo, admUsers := sysService.MasterList(ctx)
 
-	var admUsers = make([]model.AdmUser, 0)
-	pageInfo := page.Page(&admUsers, pageVm)
-	fmt.Printf("pageInfo:%v", pageInfo.Datas)
+	ctx.HTML(http.StatusOK, "admin/sys/master_list.html", pongo2.Context{
+		"page": pageInfo,
+		"datas": admUsers,
+	})
 }

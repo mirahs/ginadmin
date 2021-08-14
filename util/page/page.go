@@ -3,54 +3,65 @@ package page
 import (
 	"fmt"
 	"ginadmin/model"
-	"ginadmin/vm"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strings"
 )
 
 
+// 分页vm
+type pageVm struct {
+	Page int `form:"page"` //当前页
+	Limit int `form:"limit"` //每页显示数量
+}
+
+// 分页信息
 type Info struct {
 	Curr int
 	Limit int
 	Count int64
 	Query string
-	Datas interface{}
 }
 
 
-func Page(datasPtr interface{}, pageVm *vm.PageVm) *Info {
+func Page(ctx *gin.Context, modelDatas interface{}) *Info {
 	var wheres map[string]interface{}
-	return PageWhere(datasPtr, wheres, pageVm)
+	return work(ctx, modelDatas, wheres)
 }
 
-func PageWhere(datasPtr interface{}, wheres map[string]interface{}, pageVm *vm.PageVm) *Info {
-	page, limit := fixPageLimit(pageVm.Page, pageVm.Limit)
+
+func work(ctx *gin.Context, modelDatas interface{}, wheres map[string]interface{}) *Info {
+	page, limit := getPageLimit(ctx)
 
 	db := model.Db
 	db = formatWhere(db, wheres)
 
 	var count int64
-	db.Model(datasPtr).Count(&count)
+	db.Model(modelDatas).Count(&count)
 
-	db.Find(datasPtr)
+	db.Offset((page - 1) * limit).Limit(limit).Find(modelDatas)
 
 	return &Info{
 		Curr: page,
 		Limit: limit,
 		Count: count,
-		Datas: datasPtr,
+		Query: getQuery(ctx),
 	}
 }
 
+func getPageLimit(ctx *gin.Context) (int, int) {
+	var pageVm pageVm
 
-func fixPageLimit(page, limit int) (int, int) {
-	if page <= 0 {
-		page = 1
+	_ = ctx.ShouldBind(&pageVm)
+
+	if pageVm.Page <= 0 {
+		pageVm.Page = 1
 	}
-	if limit <= 0 {
-		limit = 10
+	if pageVm.Limit <= 0 {
+		pageVm.Limit = 10
 	}
 
-	return page, limit
+	return pageVm.Page, pageVm.Limit
 }
 
 func formatWhere(db *gorm.DB, wheres map[string]interface{}) *gorm.DB {
@@ -58,4 +69,15 @@ func formatWhere(db *gorm.DB, wheres map[string]interface{}) *gorm.DB {
 		db = db.Where(fmt.Sprintf("`%s`=?", key), val)
 	}
 	return db
+}
+
+func getQuery(ctx *gin.Context) string {
+	var datas []string
+	query := ctx.Request.URL.Query()
+
+	for key, val := range query {
+		datas = append(datas, fmt.Sprintf("%s=%s", key, val[0]))
+	}
+
+	return "&" + strings.Join(datas, "&")
 }

@@ -36,7 +36,7 @@ func (*Index) Login(ctx *gin.Context) (err error)  {
 	repoLogAdmUserLogin := repository.NewLogAdmUserLoginRepository()
 
 	admUser := repoAdmUser.GetByAccount(vmAdmUser.Account)
-	if admUser.ID == 0 {
+	if admUser.Id == 0 {
 		remark = "账号不存在"
 		err = errors.New(remark)
 		repoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)

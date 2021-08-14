@@ -2,9 +2,12 @@ package admin
 
 import (
 	"errors"
+	"ginadmin/dto"
+	"ginadmin/model"
 	"ginadmin/repository"
 	"ginadmin/util"
 	"ginadmin/util/admin"
+	"ginadmin/util/page"
 	"ginadmin/vm"
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +16,6 @@ import (
 type Sys struct {}
 
 
-// 
 func (*Sys) AccountInfo(ctx *gin.Context) vm.AdmUserVm {
 	var vmAdmUser vm.AdmUserVm
 
@@ -43,6 +45,18 @@ func (*Sys) Password(ctx *gin.Context) (err error)  {
 	repoAdmUser.UpdatePassword(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
 
 	return
+}
+
+func (*Sys) MasterList(ctx *gin.Context) (*page.Info, []*dto.AdmUserDto) {
+	var admUsers = make([]model.AdmUser, 0)
+	pageInfo := page.Page(ctx, &admUsers)
+
+	var admUserDtos = make([]*dto.AdmUserDto, 0)
+	for _, admUser := range admUsers {
+		admUserDtos = append(admUserDtos, dto.ToAdmUser(&admUser))
+	}
+
+	return pageInfo, admUserDtos
 }
 
 

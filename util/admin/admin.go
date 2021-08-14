@@ -3,6 +3,7 @@ package admin
 import (
 	"ginadmin/config"
 	"ginadmin/model"
+	"ginadmin/vm"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -41,4 +42,13 @@ func LoginCheck(ctx *gin.Context) bool {
 	session := sessions.Default(ctx)
 	isLogin := session.Get(config.SessionIsLogin)
 	return isLogin != nil && isLogin.(bool)
+}
+
+
+func PageInfo(ctx *gin.Context) *vm.PageVm {
+	var pageVm vm.PageVm
+
+	_ = ctx.ShouldBind(&pageVm)
+
+	return &pageVm
 }

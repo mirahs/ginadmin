@@ -1,0 +1,57 @@
+{% extends "../base.html" %}
+
+{% block body %}
+<div class="container">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>账号</th>
+            <th>类型</th>
+
+            <th>登陆次数</th>
+            <th>最后登陆时间</th>
+            <th>最后登陆IP</th>
+            <th>状态</th>
+            <th>备注</th>
+            <th>功能</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in datas %}
+        <tr>
+            <td style="color:#00F; font-weight:bold;">{{ data.Account }}</td>
+            <td>{{ data.TypeDesc }}</td>
+
+            <td>{{ data.LoginTimes }}</td>
+            <td>{% ymdhis data.LoginTime %}</td>
+            <td>{{ data.LoginIp }}</td>
+            <td><a class="layui-btn layui-btn-normal layui-btn-xs" href="?act=lock&id={{ data.Id }}&is_locked={{ data.IsLocked }}">{{ data.IsLockedDesc }}</a></td>
+            <td>{{ data.Remark }}</td>
+            <td>
+                <div class="layui-btn-group">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" href="password?account={{ data.Account }}">重置密码</a>
+                    <a class="layui-btn layui-btn-info layui-btn-xs" href="master_new?id={{ data.Id }}">修改</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" href="?act=del&id={{ data.Id }}" onclick="return msgYn();">删除</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+{% endblock %}
+
+
+{% block body_js %}
+<script src="/static/js/app.js?xx"></script>
+<script src="/static/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['laypage'], function () {
+        const laypage = layui.laypage;
+
+
+        laypageRender(laypage, '{{ page.Count }}', '{{ page.Curr }}', '{{ page.Limit }}', '{{ page.Query }}');
+    });
+</script>
+{% endblock %}

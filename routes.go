@@ -23,6 +23,8 @@ func initRoutes(engine *gin.Engine) {
 
 		adminG.GET("/sys/password", admin.SysPassword)
 		adminG.POST("/sys/password", admin.SysPassword)
+		adminG.GET("/sys/master_new", admin.SysMasterNew)
+		adminG.POST("/sys/master_new", admin.SysMasterNew)
 		adminG.GET("/sys/master_list", admin.SysMasterList)
 	}
 }

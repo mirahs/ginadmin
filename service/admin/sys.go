@@ -16,15 +16,29 @@ import (
 type Sys struct {}
 
 
-func (*Sys) AccountInfo(ctx *gin.Context) vm.AdmUserVm {
+func (*Sys) BindAdmUser(ctx *gin.Context) *vm.AdmUserVm {
 	var vmAdmUser vm.AdmUserVm
+	_ = ctx.ShouldBind(&vmAdmUser)
+	return &vmAdmUser
+}
 
-	err := ctx.ShouldBind(&vmAdmUser)
-	if err != nil || vmAdmUser.Account == "" {
+func (sys *Sys) AccountInfo(ctx *gin.Context) *vm.AdmUserVm {
+	vmAdmUser := sys.BindAdmUser(ctx)
+
+	if vmAdmUser.Account == "" {
 		vmAdmUser.Account = admin.GetAccount(ctx)
 	}
 
 	return vmAdmUser
+}
+
+func (*Sys) AdmUserVm2AdmUser(userVm *vm.AdmUserVm) *model.AdmUser {
+	return &model.AdmUser{
+		Id: userVm.Id,
+		Account: userVm.Account,
+		Type: userVm.Type,
+		Remark: userVm.Remark,
+	}
 }
 
 // 更改密码
@@ -42,7 +56,7 @@ func (*Sys) Password(ctx *gin.Context) (err error)  {
 	}
 
 	repoAdmUser := repository.NewAdmUserRepository()
-	repoAdmUser.UpdatePassword(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
+	repoAdmUser.UpdatePasswordByAccount(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
 
 	return
 }

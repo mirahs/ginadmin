@@ -46,3 +46,10 @@ func IndexLogout(ctx *gin.Context) {
 	indexService.Logout(ctx)
 	ctx.Redirect(http.StatusFound, "login")
 }
+
+// 无权限访问
+func IndexNoAccess(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "admin/index/no_access.html", pongo2.Context{
+		"account": admin2.GetAccount(ctx),
+	})
+}

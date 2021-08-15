@@ -32,6 +32,7 @@ var (
 		menuSys(),
 	}
 	userTypeMenus = make(map[uint8][]*Menu) //用户类型对应菜单列表
+	pathKeys = make(map[string][]int64) //path对应的用户类型
 )
 
 // 初始化菜单数据
@@ -54,14 +55,23 @@ func init() {
 						}
 						datas = append(datas, menuItem)
 					}
+
+					pathKeys[data2.Url] = data2.Key
 				case *MenuSub:
 					var datasSub []*MenuItem
 
 					data2 := data.(*MenuSub)
 					for _, dataSub := range data2.Data {
 						if com.IsSliceContainsInt64(dataSub.Key, int64(userType)) {
-							datasSub = append(datasSub, dataSub)
+							menuItem := &MenuItem{
+								Code: dataSub.Code,
+								Name: dataSub.Name,
+								Url: dataSub.Url,
+							}
+							datasSub = append(datasSub, menuItem)
 						}
+
+						pathKeys[dataSub.Url] = dataSub.Key
 					}
 
 					if len(datasSub) > 0 {
@@ -91,4 +101,12 @@ func init() {
 
 func Get(userType uint8) []*Menu {
 	return userTypeMenus[userType]
+}
+
+func Check(path string, userType uint8) bool {
+	keys, ok := pathKeys[path]
+	if !ok {
+		return false
+	}
+	return com.IsSliceContainsInt64(keys, int64(userType))
 }

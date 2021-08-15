@@ -18,6 +18,7 @@ func initRoutes(engine *gin.Engine) {
 		adminG.GET("/index/login", admin.IndexLogin)
 		adminG.POST("/index/login", admin.IndexLogin)
 		adminG.GET("/index/logout", admin.IndexLogout)
+		adminG.GET("/index/no_access", admin.IndexNoAccess)
 
 		adminG.GET("/home/welcome", admin.HomeWelcome)
 

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"ginadmin/config/menu"
 	"ginadmin/util/admin"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,14 +12,24 @@ import (
 func AdminValidate() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		urlLogin := "/admin/index/login"
+		urlLogout:= "/admin/index/logout"
+		urlIndex := "/admin/index/index"
+		urlNoAccess := "/admin/index/no_access"
+
 		urlFull := ctx.FullPath()
-		if urlFull == urlLogin {
+		if urlFull == urlLogin || urlFull == urlLogout {
 			ctx.Next()
 			return
 		}
 
 		if !admin.LoginCheck(ctx) {
 			ctx.Redirect(http.StatusFound, urlLogin)
+			ctx.Abort()
+			return
+		}
+
+		if urlFull != urlIndex && urlFull != urlNoAccess && !menu.Check(urlFull, admin.GetAccountType(ctx)) {
+			ctx.Redirect(http.StatusFound, urlNoAccess)
 			ctx.Abort()
 			return
 		}

@@ -32,8 +32,8 @@ func (*Index) Login(ctx *gin.Context) (err error)  {
 	address := thirdparty.IpAddress(ip)
 
 	var remark string
-	repoAdmUser := repository.NewAdmUserRepository()
-	repoLogAdmUserLogin := repository.NewLogAdmUserLoginRepository()
+	repoAdmUser := repository.NewRepositoryAdmUser()
+	repoLogAdmUserLogin := repository.NewRepositoryLogAdmUserLogin()
 
 	admUser := repoAdmUser.GetByAccount(vmAdmUser.Account)
 	if admUser.Id == 0 {
@@ -66,6 +66,6 @@ func (*Index) Logout(ctx *gin.Context) {
 }
 
 
-func NewIndexService() *Index {
+func NewServiceIndex() *Index {
 	return &Index{}
 }

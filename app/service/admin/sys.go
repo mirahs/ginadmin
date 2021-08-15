@@ -55,7 +55,7 @@ func (*Sys) Password(ctx *gin.Context) (err error) {
 		return
 	}
 
-	repoAdmUser := repository.NewAdmUserRepository()
+	repoAdmUser := repository.NewRepositoryAdmUser()
 	repoAdmUser.UpdatePasswordByAccount(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
 
 	return
@@ -97,6 +97,6 @@ func (*Sys) LogLogin(ctx *gin.Context, loginVm *vm.LogAdmUserLoginVm) (*page.Inf
 }
 
 
-func NewSysService() *Sys {
+func NewServiceSys() *Sys {
 	return &Sys{}
 }

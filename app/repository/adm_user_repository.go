@@ -53,6 +53,6 @@ func (*AdmUser) UpdateIsLockedById(id uint32, isLocked uint8) {
 }
 
 
-func NewAdmUserRepository() *AdmUser {
+func NewRepositoryAdmUser() *AdmUser {
 	return &AdmUser{}
 }

@@ -4,29 +4,29 @@ import (
 	"ginadmin/app/config"
 	"ginadmin/app/config/menu"
 	"ginadmin/app/service/admin"
-	admin2 "ginadmin/app/util/admin"
+	util_admin "ginadmin/app/util/admin"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 
-var indexService = admin.NewIndexService()
+var serviceIndex = admin.NewServiceIndex()
 
 
 // 后台主页
 func Index(ctx *gin.Context)  {
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
-		"account":        admin2.GetAccount(ctx),
-		"user_type_name": config.GetTypeName(admin2.GetType(ctx)),
-		"menus":          menu.Get(admin2.GetType(ctx)),
+		"account":        util_admin.GetAccount(ctx),
+		"user_type_name": config.GetTypeName(util_admin.GetType(ctx)),
+		"menus":          menu.Get(util_admin.GetType(ctx)),
 	})
 }
 
 // 后台登录
 func IndexLogin(ctx *gin.Context)  {
 	if ctx.Request.Method == "POST" {
-		err := indexService.Login(ctx)
+		err := serviceIndex.Login(ctx)
 		if err != nil {
 			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": err.Error()})
 			return
@@ -34,7 +34,7 @@ func IndexLogin(ctx *gin.Context)  {
 
 		ctx.JSON(http.StatusOK, gin.H{"code": 1})
 	} else {
-		if admin2.LoginCheck(ctx) {
+		if util_admin.LoginCheck(ctx) {
 			ctx.Redirect(http.StatusFound, "index")
 			return
 		}
@@ -44,13 +44,13 @@ func IndexLogin(ctx *gin.Context)  {
 
 // 后台退出
 func IndexLogout(ctx *gin.Context) {
-	indexService.Logout(ctx)
+	serviceIndex.Logout(ctx)
 	ctx.Redirect(http.StatusFound, "login")
 }
 
 // 访问拒绝
 func IndexDeny(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "admin/index/deny.html", pongo2.Context{
-		"account": admin2.GetAccount(ctx),
+		"account": util_admin.GetAccount(ctx),
 	})
 }

@@ -34,6 +34,6 @@ func (*LogAdmUserLogin) add(account string, status int, ip string, address strin
 }
 
 
-func NewLogAdmUserLoginRepository() *LogAdmUserLogin {
+func NewRepositoryLogAdmUserLogin() *LogAdmUserLogin {
 	return &LogAdmUserLogin{}
 }

@@ -14,14 +14,14 @@ import (
 )
 
 
-var sysService = admin2.NewSysService()
-var repoAdmUser = repository.NewAdmUserRepository()
-var repoLogAdmUserLogin = repository.NewLogAdmUserLoginRepository()
+var serviceSys = admin2.NewServiceSys()
+var repoAdmUser = repository.NewRepositoryAdmUser()
+var repoLogAdmUserLogin = repository.NewRepositoryLogAdmUserLogin()
 
 
 func SysPassword(ctx *gin.Context)  {
 	if ctx.Request.Method == "POST" {
-		err := sysService.Password(ctx)
+		err := serviceSys.Password(ctx)
 		if err != nil {
 			ctx.JSON(http.StatusOK, gin.H{"code": 0, "msg": err.Error()})
 			return
@@ -29,7 +29,7 @@ func SysPassword(ctx *gin.Context)  {
 
 		ctx.JSON(http.StatusOK, gin.H{"code": 1})
 	} else {
-		vmAdmUser := sysService.AccountInfo(ctx)
+		vmAdmUser := serviceSys.AccountInfo(ctx)
 
 		ctx.HTML(http.StatusOK, "admin/sys/password.html", pongo2.Context{
 			"account": vmAdmUser.Account,
@@ -38,7 +38,7 @@ func SysPassword(ctx *gin.Context)  {
 }
 
 func SysMasterNew(ctx *gin.Context) {
-	vmAdmUser := sysService.BindAdmUser(ctx)
+	vmAdmUser := serviceSys.BindAdmUser(ctx)
 	context := pongo2.Context{}
 
 	if ctx.Request.Method == "GET" {
@@ -63,7 +63,7 @@ func SysMasterNew(ctx *gin.Context) {
 			return
 		}
 
-		admUser := sysService.AdmUserVm2AdmUser(vmAdmUser)
+		admUser := serviceSys.AdmUserVm2AdmUser(vmAdmUser)
 		if admUser.Id > 0 {
 			repoAdmUser.Update(admUser)
 		} else {
@@ -75,7 +75,7 @@ func SysMasterNew(ctx *gin.Context) {
 }
 
 func SysMasterList(ctx *gin.Context) {
-	vmAdmUser := sysService.BindAdmUser(ctx)
+	vmAdmUser := serviceSys.BindAdmUser(ctx)
 
 	switch ctx.Query("act") {
 	case "del":
@@ -94,7 +94,7 @@ func SysMasterList(ctx *gin.Context) {
 			util.GinRedirect(ctx)
 		}
 	default:
-		pageInfo, admUsers := sysService.MasterList(ctx)
+		pageInfo, admUsers := serviceSys.MasterList(ctx)
 
 		ctx.HTML(http.StatusOK, "admin/sys/master_list.html", pongo2.Context{
 			"page": pageInfo,
@@ -113,7 +113,7 @@ func SysLogLogin(ctx *gin.Context)  {
 		return
 	}
 
-	pageInfo, logLogins := sysService.LogLogin(ctx, &vmUserLogin)
+	pageInfo, logLogins := serviceSys.LogLogin(ctx, &vmUserLogin)
 
 	ctx.HTML(http.StatusOK, "admin/sys/log_login.html", pongo2.Context{
 		"account": vmUserLogin.Account,

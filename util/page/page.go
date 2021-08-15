@@ -9,7 +9,7 @@ import (
 
 
 // 分页vm
-type pageVm struct {
+type vm struct {
 	Page int `form:"page"` //当前页
 	Limit int `form:"limit"` //每页显示数量
 }
@@ -65,18 +65,18 @@ func work(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}, orde
 }
 
 func getPageLimit(ctx *gin.Context) (int, int) {
-	var pageVm pageVm
+	var v vm
 
-	_ = ctx.ShouldBind(&pageVm)
+	_ = ctx.ShouldBind(&v)
 
-	if pageVm.Page <= 0 {
-		pageVm.Page = 1
+	if v.Page <= 0 {
+		v.Page = 1
 	}
-	if pageVm.Limit <= 0 {
-		pageVm.Limit = 10
+	if v.Limit <= 0 {
+		v.Limit = 10
 	}
 
-	return pageVm.Page, pageVm.Limit
+	return v.Page, v.Limit
 }
 
 func whereBuild(wheres [][]interface{}) (sqlFormat string, args []interface{}) {

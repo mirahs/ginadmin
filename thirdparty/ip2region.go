@@ -1,4 +1,4 @@
-package ip2region
+package thirdparty
 
 import (
 	"fmt"
@@ -9,18 +9,22 @@ import (
 var Ip *ip2region.Ip2Region
 
 
-func RegionInit(dbFile string)  {
+func IpInit(dbFile string)  {
 	var err error
 	Ip, err = ip2region.New(dbFile)
 	if err != nil {
-		panic("ip2region.RegionInit New err:" + err.Error())
+		panic("ip2region.IpInit New err:" + err.Error())
 	}
 }
 
-func GetAddress(ip string) string {
+func IpAddress(ip string) string {
 	ipInfo, _ := Ip.MemorySearch(ip)
+
+	if ipInfo.Country == "0" && ipInfo.ISP != "" {
+		return ipInfo.ISP
+	}
 	if ipInfo.Country == "" {
-		return ""
+		return "内网地址或ipv6"
 	}
 	if ipInfo.Province == "0" {
 		return ipInfo.Country

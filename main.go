@@ -2,7 +2,7 @@ package main
 
 import (
 	"ginadmin/model"
-	"ginadmin/thirdparty/ip2region"
+	"ginadmin/thirdparty"
 	"ginadmin/thirdparty/pongo2gin"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,8 +11,8 @@ import (
 
 func main() {
 	model.DbInit()
-	ip2region.RegionInit("./ip2region.db")
-	defer ip2region.Ip.Close()
+	thirdparty.IpInit("./ip2region.db")
+	defer thirdparty.Ip.Close()
 
 	engine := gin.Default()
 	engine.HTMLRender = pongo2gin.Default()

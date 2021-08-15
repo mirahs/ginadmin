@@ -3,7 +3,7 @@ package admin
 import (
 	"errors"
 	"ginadmin/repository"
-	"ginadmin/thirdparty/ip2region"
+	"ginadmin/thirdparty"
 	"ginadmin/util"
 	"ginadmin/util/admin"
 	"ginadmin/vm"
@@ -29,7 +29,7 @@ func (*Index) Login(ctx *gin.Context) (err error)  {
 	}
 
 	ip := ctx.ClientIP()
-	address := ip2region.GetAddress(ip)
+	address := thirdparty.IpAddress(ip)
 
 	var remark string
 	repoAdmUser := repository.NewAdmUserRepository()

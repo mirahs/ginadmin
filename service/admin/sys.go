@@ -66,7 +66,7 @@ func (*Sys) MasterList(ctx *gin.Context) (*page.Info, []*dto.AdmUserDto) {
 	typeMe := admin.GetAccountType(ctx)
 	wheres = append(wheres, []interface{}{"type", ">=", typeMe})
 
-	pageInfo := page.WherePage(ctx, &admUsers, wheres)
+	pageInfo := page.PageWhereOrder(ctx, &admUsers, wheres, "`id`")
 
 	var admUserDtos = make([]*dto.AdmUserDto, 0)
 	for _, admUser := range admUsers {
@@ -84,7 +84,7 @@ func (*Sys) LogLogin(ctx *gin.Context, loginVm *vm.LogAdmUserLoginVm) (*page.Inf
 		wheres = append(wheres, []interface{}{"account", loginVm.Account})
 	}
 
-	pageInfo := page.WherePage(ctx, &userLogins, wheres)
+	pageInfo := page.PageWhereOrder(ctx, &userLogins, wheres, "`id` DESC")
 
 	var logAdmUserLoginDtos = make([]*dto.LogAdmUserLoginDto, 0)
 	for _, userLogin := range userLogins {

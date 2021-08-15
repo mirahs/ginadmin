@@ -25,23 +25,31 @@ type Info struct {
 
 func Page(ctx *gin.Context, modelDatas interface{}) *Info {
 	var wheres [][]interface{}
-	return work(ctx, modelDatas, wheres)
+	return work(ctx, modelDatas, wheres, "")
 }
 
-func WherePage(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}) *Info {
-	return work(ctx, modelDatas, wheres)
+func PageWhere(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}) *Info {
+	return work(ctx, modelDatas, wheres, "")
+}
+
+func PageWhereOrder(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}, order string) *Info {
+	return work(ctx, modelDatas, wheres, order)
 }
 
 
-func work(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}) *Info {
-	sqlFormat, args := whereBuild(wheres)
-
-	page, limit := getPageLimit(ctx)
-
+func work(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}, order string) *Info {
 	db := model.Db
-	if len(args) != 0 {
+
+	if len(wheres) > 0 {
+		sqlFormat, args := whereBuild(wheres)
 		db = db.Where(sqlFormat, args...)
 	}
+
+	if order != "" {
+		db = db.Order(order)
+	}
+
+	page, limit := getPageLimit(ctx)
 
 	var count int64
 	db.Model(modelDatas).Count(&count)

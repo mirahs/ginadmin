@@ -1,0 +1,64 @@
+{% extends "../base.html" %}
+
+{% block body %}
+<div class="container">
+    <form class="layui-form" method="get">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="account" placeholder="账号" autocomplete="off" class="layui-input" value="{{ account }}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <button class="layui-btn">搜索</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>账号</th>
+            <th>时间</th>
+            <th>状态</th>
+            <th>备注</th>
+            <th>IP</th>
+            <th>地址</th>
+            <th>功能</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in datas %}
+        <tr>
+            <td>{{ data.Account }}</td>
+            <td>{{ data.TimeDesc }}</td>
+            <td>{{ data.StatusDesc }}</td>
+            <td>{{ data.Remark }}</td>
+            <td>{{ data.Ip }}</td>
+            <td>{{ data.Address }}</td>
+            <td>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" href="?act=del&id={{ data.Id }}">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
+{% endblock %}
+
+
+{% block body_js %}
+<script src="/static/js/app.js"></script>
+<script src="/static/layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['laypage'], function () {
+        const laypage = layui.laypage;
+
+
+        laypageRender(laypage, '{{ page.Count }}', '{{ page.Curr }}', '{{ page.Limit }}', '{{ page.Query }}');
+    });
+</script>
+{% endblock %}

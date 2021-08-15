@@ -12,9 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-type Sys struct {}
-
+type Sys struct{}
 
 func (*Sys) BindAdmUser(ctx *gin.Context) *vm.AdmUserVm {
 	var vmAdmUser vm.AdmUserVm
@@ -34,15 +32,15 @@ func (sys *Sys) AccountInfo(ctx *gin.Context) *vm.AdmUserVm {
 
 func (*Sys) AdmUserVm2AdmUser(userVm *vm.AdmUserVm) *model.AdmUser {
 	return &model.AdmUser{
-		Id: userVm.Id,
+		Id:      userVm.Id,
 		Account: userVm.Account,
-		Type: userVm.Type,
-		Remark: userVm.Remark,
+		Type:    userVm.Type,
+		Remark:  userVm.Remark,
 	}
 }
 
 // 更改密码
-func (*Sys) Password(ctx *gin.Context) (err error)  {
+func (*Sys) Password(ctx *gin.Context) (err error) {
 	var vmAdmUser vm.AdmUserVm
 	err = ctx.ShouldBind(&vmAdmUser)
 	if err != nil {
@@ -63,7 +61,12 @@ func (*Sys) Password(ctx *gin.Context) (err error)  {
 
 func (*Sys) MasterList(ctx *gin.Context) (*page.Info, []*dto.AdmUserDto) {
 	var admUsers = make([]model.AdmUser, 0)
-	pageInfo := page.Page(ctx, &admUsers)
+	var wheres = make([][]interface{}, 0)
+
+	typeMe := admin.GetAccountType(ctx)
+	wheres = append(wheres, []interface{}{"type", ">=", typeMe})
+
+	pageInfo := page.WherePage(ctx, &admUsers, wheres)
 
 	var admUserDtos = make([]*dto.AdmUserDto, 0)
 	for _, admUser := range admUsers {
@@ -73,6 +76,23 @@ func (*Sys) MasterList(ctx *gin.Context) (*page.Info, []*dto.AdmUserDto) {
 	return pageInfo, admUserDtos
 }
 
+func (*Sys) LogLogin(ctx *gin.Context, loginVm *vm.LogAdmUserLoginVm) (*page.Info, []*dto.LogAdmUserLoginDto) {
+	var userLogins = make([]model.LogAdmUserLogin, 0)
+	var wheres = make([][]interface{}, 0)
+
+	if loginVm.Account != "" {
+		wheres = append(wheres, []interface{}{"account", loginVm.Account})
+	}
+
+	pageInfo := page.WherePage(ctx, &userLogins, wheres)
+
+	var logAdmUserLoginDtos = make([]*dto.LogAdmUserLoginDto, 0)
+	for _, userLogin := range userLogins {
+		logAdmUserLoginDtos = append(logAdmUserLoginDtos, dto.ToLogAdmUserLogin(&userLogin))
+	}
+
+	return pageInfo, logAdmUserLoginDtos
+}
 
 func NewSysService() *Sys {
 	return &Sys{}

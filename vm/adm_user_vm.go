@@ -2,7 +2,7 @@ package vm
 
 
 type AdmUserVm struct {
-	Id uint32 `form:"id"` //ID
+	Id uint32 `form:"id"` //Id
 	Account string `form:"account"` //账号
 	Password string `form:"password"` //密码
 	Type     uint8  `form:"type"` //类型 10:管理员|20:游客

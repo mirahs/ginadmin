@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"ginadmin/model"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"strings"
 )
 
@@ -25,16 +24,24 @@ type Info struct {
 
 
 func Page(ctx *gin.Context, modelDatas interface{}) *Info {
-	var wheres map[string]interface{}
+	var wheres [][]interface{}
+	return work(ctx, modelDatas, wheres)
+}
+
+func WherePage(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}) *Info {
 	return work(ctx, modelDatas, wheres)
 }
 
 
-func work(ctx *gin.Context, modelDatas interface{}, wheres map[string]interface{}) *Info {
+func work(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}) *Info {
+	sqlFormat, args := whereBuild(wheres)
+
 	page, limit := getPageLimit(ctx)
 
 	db := model.Db
-	db = formatWhere(db, wheres)
+	if len(args) != 0 {
+		db = db.Where(sqlFormat, args...)
+	}
 
 	var count int64
 	db.Model(modelDatas).Count(&count)
@@ -64,11 +71,32 @@ func getPageLimit(ctx *gin.Context) (int, int) {
 	return pageVm.Page, pageVm.Limit
 }
 
-func formatWhere(db *gorm.DB, wheres map[string]interface{}) *gorm.DB {
-	for key, val := range wheres {
-		db = db.Where(fmt.Sprintf("`%s`=?", key), val)
+func whereBuild(wheres [][]interface{}) (sqlFormat string, args []interface{}) {
+	for _, vals := range wheres {
+		if len(vals) != 3 && len(vals) != 2 {
+			panic(fmt.Errorf("error in query condition:%v", vals))
+		}
+
+		if sqlFormat != "" {
+			sqlFormat += " AND "
+		}
+
+		switch len(vals) {
+		case 2:
+			sqlFormat += fmt.Sprintf("`%s`=?", vals[0])
+			args = append(args, vals[1])
+		case 3:
+			switch vals[1] {
+			case "in", "IN", "iN", "In":
+				sqlFormat += fmt.Sprintf("`%s` IN (?)", vals[0])
+			default:
+				sqlFormat += fmt.Sprintf("`%s` %s ?", vals[0], vals[1])
+			}
+			args = append(args, vals[2])
+		}
 	}
-	return db
+
+	return sqlFormat, args
 }
 
 func getQuery(ctx *gin.Context) string {

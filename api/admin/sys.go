@@ -7,6 +7,7 @@ import (
 	admin2 "ginadmin/service/admin"
 	"ginadmin/util"
 	"ginadmin/util/admin"
+	"ginadmin/vm"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -15,6 +16,7 @@ import (
 
 var sysService = admin2.NewSysService()
 var repoAdmUser = repository.NewAdmUserRepository()
+var repoLogAdmUserLogin = repository.NewLogAdmUserLoginRepository()
 
 
 func SysPassword(ctx *gin.Context)  {
@@ -99,4 +101,23 @@ func SysMasterList(ctx *gin.Context) {
 			"datas": admUsers,
 		})
 	}
+}
+
+func SysLogLogin(ctx *gin.Context)  {
+	var vmUserLogin vm.LogAdmUserLoginVm
+	_ = ctx.ShouldBind(&vmUserLogin)
+
+	if vmUserLogin.Id != 0 {
+		repoLogAdmUserLogin.DelById(vmUserLogin.Id)
+		util.GinRedirect(ctx)
+		return
+	}
+
+	pageInfo, logLogins := sysService.LogLogin(ctx, &vmUserLogin)
+
+	ctx.HTML(http.StatusOK, "admin/sys/log_login.html", pongo2.Context{
+		"account": vmUserLogin.Account,
+		"page": pageInfo,
+		"datas": logLogins,
+	})
 }

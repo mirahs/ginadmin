@@ -11,7 +11,7 @@ func menuHome() *Menu {
 				Code: "welcome",
 				Name: "欢迎",
 				Url: "/admin/home/welcome",
-				Key: []int{10, 20},
+				Key: []int64{10, 20},
 			},
 		},
 	}

@@ -18,7 +18,7 @@ func Index(ctx *gin.Context)  {
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
 		"account":        admin2.GetAccount(ctx),
 		"user_type_name": "管理员",
-		"menus":          menu.Menus(),
+		"menus":          menu.Get(admin2.GetAccountType(ctx)),
 	})
 }
 

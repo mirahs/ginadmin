@@ -1,24 +1,30 @@
 package main
 
 import (
-	"ginadmin/model"
-	"ginadmin/thirdparty"
-	"ginadmin/thirdparty/pongo2gin"
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"ginadmin/app"
+	"ginadmin/app/config"
 )
 
 
 func main() {
-	model.DbInit()
-	thirdparty.IpInit("./ip2region.db")
-	defer thirdparty.Ip.Close()
+	app.Start(&config.App{
+		MysqlHost:     "127.0.0.1",
+		MysqlPort:     3306,
+		MysqlDatabase: "ginadmin",
+		MysqlUser:     "root",
+		MysqlPassword: "root",
 
-	engine := gin.Default()
-	engine.HTMLRender = pongo2gin.Default()
-	engine.StaticFS("/static", http.Dir("./static"))
+		DefaultAccount:     "admin",
+		DefaultPassword:    "admin",
+		DefaultType:        config.AdminUserTypeAdmin,
+		DefaultNewPassword: "123456",
 
-	initRoutes(engine)
+		TemplateDir: "./app/template/",
+		StaticDir:   "./app/static/",
 
-	panic(engine.Run())
+		SessionName: "ginadmin_session",
+		SessionSecret: "ginadmin_secret",
+
+		Ip2RegionDbFile: "./app/ip2region.db",
+	})
 }

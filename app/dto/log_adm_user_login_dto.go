@@ -5,6 +5,7 @@ import (
 	"ginadmin/app/util"
 )
 
+
 type LogAdmUserLoginDto struct {
 	Id       uint32
 	Account  string

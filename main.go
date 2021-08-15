@@ -26,5 +26,10 @@ func main() {
 		SessionSecret: "ginadmin_secret",
 
 		Ip2RegionDbFile: "./app/ip2region.db",
+
+		UrlLogin: "/admin/index/login",
+		UrlLogout: "/admin/index/logout",
+		UrlIndex: "/admin/index/index",
+		UrlDeny: "/admin/index/deny",
 	})
 }

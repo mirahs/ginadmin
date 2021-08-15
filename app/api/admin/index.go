@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"ginadmin/app/config"
 	"ginadmin/app/config/menu"
 	"ginadmin/app/service/admin"
 	admin2 "ginadmin/app/util/admin"
@@ -17,8 +18,8 @@ var indexService = admin.NewIndexService()
 func Index(ctx *gin.Context)  {
 	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
 		"account":        admin2.GetAccount(ctx),
-		"user_type_name": "管理员",
-		"menus":          menu.Get(admin2.GetAccountType(ctx)),
+		"user_type_name": config.GetTypeName(admin2.GetType(ctx)),
+		"menus":          menu.Get(admin2.GetType(ctx)),
 	})
 }
 
@@ -47,9 +48,9 @@ func IndexLogout(ctx *gin.Context) {
 	ctx.Redirect(http.StatusFound, "login")
 }
 
-// 无权限访问
-func IndexNoAccess(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "admin/index/no_access.html", pongo2.Context{
+// 访问拒绝
+func IndexDeny(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "admin/index/deny.html", pongo2.Context{
 		"account": admin2.GetAccount(ctx),
 	})
 }

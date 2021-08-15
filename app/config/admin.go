@@ -10,3 +10,9 @@ var (
 		AdminUserTypeGuest: "游客",
 	}
 )
+
+
+func GetTypeName(userType uint8) string {
+	userName, _ := AdminUserTypesDesc[userType]
+	return userName
+}

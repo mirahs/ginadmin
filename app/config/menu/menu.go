@@ -5,6 +5,7 @@ import (
 	"github.com/unknwon/com"
 )
 
+
 // 菜单
 type Menu struct {
 	Code string
@@ -26,6 +27,7 @@ type MenuItem struct {
 	Key  []int64
 }
 
+
 var (
 	menus = []*Menu{
 		menuHome(),
@@ -34,6 +36,7 @@ var (
 	userTypeMenus = make(map[uint8][]*Menu) //用户类型对应菜单列表
 	pathKeys = make(map[string][]int64)     //path对应的用户类型
 )
+
 
 // 初始化菜单数据
 func init() {

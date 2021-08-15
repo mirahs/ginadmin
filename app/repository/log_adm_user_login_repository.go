@@ -5,7 +5,9 @@ import (
 	"ginadmin/app/util"
 )
 
+
 type LogAdmUserLogin struct{}
+
 
 func (login *LogAdmUserLogin) AddSuccess(account string, ip string, address string, remark string) {
 	login.add(account, 1, ip, address, remark)
@@ -30,6 +32,7 @@ func (*LogAdmUserLogin) add(account string, status int, ip string, address strin
 		Remark:  remark,
 	})
 }
+
 
 func NewLogAdmUserLoginRepository() *LogAdmUserLogin {
 	return &LogAdmUserLogin{}

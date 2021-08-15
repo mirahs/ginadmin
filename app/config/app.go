@@ -20,6 +20,11 @@ type App struct {
 	SessionSecret string //session 加密密钥
 
 	Ip2RegionDbFile string //Ip2Region 数据文件
+
+	UrlLogin	string //登录url
+	UrlLogout	string //登录url
+	UrlIndex	string //主页url
+	UrlDeny		string //访问拒绝url
 }
 
 

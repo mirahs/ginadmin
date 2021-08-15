@@ -6,6 +6,7 @@ import (
 	"ginadmin/app/util"
 )
 
+
 type AdmUserDto struct {
 	Id       uint32
 	Account  string

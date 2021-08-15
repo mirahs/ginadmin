@@ -5,6 +5,7 @@ import (
 	"ginadmin/app/util"
 )
 
+
 type AdmUser struct {}
 
 

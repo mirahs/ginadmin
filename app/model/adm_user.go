@@ -1,5 +1,6 @@
 package model
 
+
 type AdmUser struct {
 	Id       uint32 `gorm:"auto_increment; comment:Id"`
 	Account  string `gorm:"type:varchar(32); not null; comment:帐号; uniqueIndex"`

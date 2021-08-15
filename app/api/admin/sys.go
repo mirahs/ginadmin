@@ -47,7 +47,7 @@ func SysMasterNew(ctx *gin.Context) {
 			context["data"] = admUser
 		}
 
-		userType := admin.GetAccountType(ctx)
+		userType := admin.GetType(ctx)
 		var userTypeDescs []*dto.UserTypeDescDto
 		for key, val := range config.AdminUserTypesDesc {
 			if key >= userType {
@@ -79,14 +79,14 @@ func SysMasterList(ctx *gin.Context) {
 
 	switch ctx.Query("act") {
 	case "del":
-		if vmAdmUser.Id == admin.GetAccountId(ctx) {
+		if vmAdmUser.Id == admin.GetId(ctx) {
 			util.GinError(ctx,"不能删除自己")
 		} else {
 			repoAdmUser.DelById(vmAdmUser.Id)
 			util.GinError(ctx,"删除成功")
 		}
 	case "lock":
-		if vmAdmUser.Id == admin.GetAccountId(ctx) {
+		if vmAdmUser.Id == admin.GetId(ctx) {
 			util.GinError(ctx,"不能操作自己")
 		} else {
 			isLocked := uint8(util.If(vmAdmUser.IsLocked == 0, 1, 0).(int))

@@ -12,7 +12,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
 type Sys struct{}
+
 
 func (*Sys) BindAdmUser(ctx *gin.Context) *vm.AdmUserVm {
 	var vmAdmUser vm.AdmUserVm
@@ -63,7 +65,7 @@ func (*Sys) MasterList(ctx *gin.Context) (*page.Info, []*dto.AdmUserDto) {
 	var admUsers = make([]model.AdmUser, 0)
 	var wheres = make([][]interface{}, 0)
 
-	typeMe := admin.GetAccountType(ctx)
+	typeMe := admin.GetType(ctx)
 	wheres = append(wheres, []interface{}{"type", ">=", typeMe})
 
 	pageInfo := page.PageWhereOrder(ctx, &admUsers, wheres, "`id`")
@@ -93,6 +95,7 @@ func (*Sys) LogLogin(ctx *gin.Context, loginVm *vm.LogAdmUserLoginVm) (*page.Inf
 
 	return pageInfo, logAdmUserLoginDtos
 }
+
 
 func NewSysService() *Sys {
 	return &Sys{}

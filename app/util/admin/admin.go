@@ -13,12 +13,12 @@ func GetAccount(ctx *gin.Context) string {
 	return session.Get(config.SessionAccount).(string)
 }
 
-func GetAccountId(ctx *gin.Context) uint32 {
+func GetId(ctx *gin.Context) uint32 {
 	session := sessions.Default(ctx)
 	return session.Get(config.SessionId).(uint32)
 }
 
-func GetAccountType(ctx *gin.Context) uint8 {
+func GetType(ctx *gin.Context) uint8 {
 	session := sessions.Default(ctx)
 	return session.Get(config.SessionType).(uint8)
 }

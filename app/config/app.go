@@ -28,9 +28,96 @@ type App struct {
 }
 
 
-var AppInst *App
+var AppInst = &App{
+	MysqlHost:     "127.0.0.1",
+	MysqlPort:     3306,
+	MysqlDatabase: "ginadmin",
+	MysqlUser:     "root",
+	MysqlPassword: "root",
+
+	DefaultAccount:     "admin",
+	DefaultPassword:    "admin",
+	DefaultType:        AdminUserTypeAdmin,
+	DefaultNewPassword: "123456",
+
+	TemplateDir: "./app/template/",
+	StaticDir:   "./app/static/",
+
+	SessionName: "ginadmin_session",
+	SessionSecret: "ginadmin_secret",
+
+	Ip2RegionDbFile: "./app/ip2region.db",
+
+	UrlLogin: "/admin/index/login",
+	UrlLogout: "/admin/index/logout",
+	UrlIndex: "/admin/index/index",
+	UrlDeny: "/admin/index/deny",
+}
 
 
+// app参数设置(非零值就替换)
 func AppSet(app *App) {
-	AppInst = app
+	if app == nil {
+		return
+	}
+
+	if app.MysqlHost != "" {
+		AppInst.MysqlHost = app.MysqlHost
+	}
+	if app.MysqlPort != 0 {
+		AppInst.MysqlPort = app.MysqlPort
+	}
+	if app.MysqlDatabase != "" {
+		AppInst.MysqlDatabase = app.MysqlDatabase
+	}
+	if app.MysqlUser != "" {
+		AppInst.MysqlUser = app.MysqlUser
+	}
+	if app.MysqlPassword != "" {
+		AppInst.MysqlPassword = app.MysqlPassword
+	}
+
+	if app.DefaultAccount != "" {
+		AppInst.DefaultAccount = app.DefaultAccount
+	}
+	if app.DefaultPassword != "" {
+		AppInst.DefaultPassword = app.DefaultPassword
+	}
+	if app.DefaultType != 0 {
+		AppInst.DefaultType = app.DefaultType
+	}
+	if app.DefaultNewPassword != "" {
+		AppInst.DefaultNewPassword = app.DefaultNewPassword
+	}
+
+	if app.TemplateDir != "" {
+		AppInst.TemplateDir = app.TemplateDir
+	}
+	if app.StaticDir != "" {
+		AppInst.StaticDir = app.StaticDir
+	}
+
+	if app.SessionName != "" {
+		AppInst.SessionName = app.SessionName
+	}
+	if app.SessionSecret != "" {
+		AppInst.SessionSecret = app.SessionSecret
+	}
+
+	if app.Ip2RegionDbFile != "" {
+		AppInst.Ip2RegionDbFile = app.Ip2RegionDbFile
+	}
+
+	if app.UrlLogin != "" {
+		AppInst.UrlLogin = app.UrlLogin
+	}
+	if app.UrlLogout != "" {
+		AppInst.UrlLogout = app.UrlLogout
+	}
+	if app.UrlIndex != "" {
+		AppInst.UrlIndex = app.UrlIndex
+	}
+	if app.UrlDeny != "" {
+		AppInst.UrlDeny = app.UrlDeny
+	}
 }

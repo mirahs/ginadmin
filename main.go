@@ -7,29 +7,12 @@ import (
 
 
 func main() {
+	// app有默认参数, 如果跟自己的不一致, 在这里替换
 	app.Start(&config.App{
 		MysqlHost:     "127.0.0.1",
 		MysqlPort:     3306,
 		MysqlDatabase: "ginadmin",
 		MysqlUser:     "root",
 		MysqlPassword: "root",
-
-		DefaultAccount:     "admin",
-		DefaultPassword:    "admin",
-		DefaultType:        config.AdminUserTypeAdmin,
-		DefaultNewPassword: "123456",
-
-		TemplateDir: "./app/template/",
-		StaticDir:   "./app/static/",
-
-		SessionName: "ginadmin_session",
-		SessionSecret: "ginadmin_secret",
-
-		Ip2RegionDbFile: "./app/ip2region.db",
-
-		UrlLogin: "/admin/index/login",
-		UrlLogout: "/admin/index/logout",
-		UrlIndex: "/admin/index/index",
-		UrlDeny: "/admin/index/deny",
 	})
 }

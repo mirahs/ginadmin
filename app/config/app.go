@@ -8,10 +8,9 @@ type App struct {
 	MysqlUser     string //MySQL 账号
 	MysqlPassword string //MySQL 密码
 
-	DefaultAccount     string //默认后台账号
-	DefaultPassword    string //默认后台密码
-	DefaultType        uint8  //默认后台账号类型(建议管理员, 登录后台创建新管理员账号后删除默认的后台账号)
-	DefaultNewPassword string //新建后台账号默认密码
+	InitAccount     string //初始后台管理员账号
+	InitPassword    string //初始后台管理员密码
+	DefaultPassword string //新建后台账号默认密码
 
 	TemplateDir string //模板目录
 	StaticDir   string //静态资源目录
@@ -35,10 +34,9 @@ var AppInst = &App{
 	MysqlUser:     "root",
 	MysqlPassword: "root",
 
-	DefaultAccount:     "admin",
-	DefaultPassword:    "admin",
-	DefaultType:        AdminUserTypeAdmin,
-	DefaultNewPassword: "123456",
+	InitAccount:     "admin",
+	InitPassword:    "admin",
+	DefaultPassword: "123456",
 
 	TemplateDir: "./app/template/",
 	StaticDir:   "./app/static/",
@@ -77,17 +75,14 @@ func AppSet(app *App) {
 		AppInst.MysqlPassword = app.MysqlPassword
 	}
 
-	if app.DefaultAccount != "" {
-		AppInst.DefaultAccount = app.DefaultAccount
+	if app.InitAccount != "" {
+		AppInst.InitAccount = app.InitAccount
+	}
+	if app.InitPassword != "" {
+		AppInst.InitPassword = app.InitPassword
 	}
 	if app.DefaultPassword != "" {
 		AppInst.DefaultPassword = app.DefaultPassword
-	}
-	if app.DefaultType != 0 {
-		AppInst.DefaultType = app.DefaultType
-	}
-	if app.DefaultNewPassword != "" {
-		AppInst.DefaultNewPassword = app.DefaultNewPassword
 	}
 
 	if app.TemplateDir != "" {

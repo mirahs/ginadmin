@@ -32,10 +32,10 @@ func DbInit() {
 
 	if !hasAdmUser {
 		Db.Create(&AdmUser{
-			Account: config.AppInst.DefaultAccount,
-			Password: util.Md5(config.AppInst.DefaultPassword),
-			Type: config.AppInst.DefaultType,
-			Remark: config.AppInst.DefaultAccount,
+			Account: config.AppInst.InitAccount,
+			Password: util.Md5(config.AppInst.InitPassword),
+			Type: config.AdminUserTypeAdmin,
+			Remark: config.AppInst.InitAccount,
 		})
 	}
 }

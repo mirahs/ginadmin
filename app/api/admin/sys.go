@@ -67,7 +67,7 @@ func SysMasterNew(ctx *gin.Context) {
 		if admUser.Id > 0 {
 			repoAdmUser.Update(admUser)
 		} else {
-			admUser.Password = util.Md5(config.AppInst.DefaultNewPassword)
+			admUser.Password = util.Md5(config.AppInst.DefaultPassword)
 			repoAdmUser.Add(admUser)
 		}
 		util.GinSuccess(ctx)

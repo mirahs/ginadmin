@@ -2,7 +2,6 @@ package admin
 
 import (
 	"errors"
-	"ginadmin/app/repository"
 	"ginadmin/app/thirdparty"
 	"ginadmin/app/util"
 	"ginadmin/app/util/admin"
@@ -12,10 +11,12 @@ import (
 )
 
 
-type Index struct {}
+type Index struct {
+	base
+}
 
 
-func (*Index) Login(ctx *gin.Context) (err error)  {
+func (index *Index) Login(ctx *gin.Context) (err error)  {
 	var vmAdmUser vm.AdmUserVm
 	err = ctx.ShouldBind(&vmAdmUser)
 	if err != nil {
@@ -32,14 +33,12 @@ func (*Index) Login(ctx *gin.Context) (err error)  {
 	address := thirdparty.IpAddress(ip)
 
 	var remark string
-	repoAdmUser := repository.NewRepositoryAdmUser()
-	repoLogAdmUserLogin := repository.NewRepositoryLogAdmUserLogin()
 
-	admUser := repoAdmUser.GetByAccount(vmAdmUser.Account)
+	admUser := index.RepoAdmUser.GetByAccount(vmAdmUser.Account)
 	if admUser.Id == 0 {
 		remark = "账号不存在"
 		err = errors.New(remark)
-		repoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)
+		index.RepoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)
 		return
 	}
 
@@ -47,14 +46,14 @@ func (*Index) Login(ctx *gin.Context) (err error)  {
 	if passwordMd5 != admUser.Password {
 		remark = "密码错误"
 		err = errors.New(remark)
-		repoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)
+		index.RepoLogAdmUserLogin.AddFailed(vmAdmUser.Account, ip, address, remark)
 		return
 	}
 
 	admin.LoginSessionSet(ctx, admUser)
 
-	repoAdmUser.LoginUpdate(admUser, ip)
-	repoLogAdmUserLogin.AddSuccess(vmAdmUser.Account, ip, address, remark)
+	index.RepoAdmUser.LoginUpdate(admUser, ip)
+	index.RepoLogAdmUserLogin.AddSuccess(vmAdmUser.Account, ip, address, remark)
 
 	return
 }
@@ -63,9 +62,4 @@ func (*Index) Logout(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 	session.Clear()
 	_ = session.Save()
-}
-
-
-func NewServiceIndex() *Index {
-	return &Index{}
 }

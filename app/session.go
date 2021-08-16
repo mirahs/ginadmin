@@ -8,6 +8,7 @@ import (
 )
 
 
+// 初始化 session
 func initSession(group *gin.RouterGroup) {
 	store := memstore.NewStore([]byte(config.AppInst.SessionSecret))
 	store.Options(sessions.Options{Path: group.BasePath()})

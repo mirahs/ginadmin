@@ -6,6 +6,7 @@ import (
 )
 
 
+// 欢迎页
 func HomeWelcome(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "welcome")
 }

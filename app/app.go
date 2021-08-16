@@ -10,6 +10,7 @@ import (
 )
 
 
+// 启动app
 func Start(app *config.App) {
 	config.AppSet(app)
 
@@ -19,6 +20,7 @@ func Start(app *config.App) {
 	defer thirdparty.IpClose()
 
 	engine := gin.Default()
+	// 模板引擎替换成 pongo2
 	engine.HTMLRender = pongo2gin.New(pongo2gin.RenderOptions{TemplateDir: config.AppInst.TemplateDir, ContentType: "text/html; charset=utf-8"})
 	engine.StaticFS("/static", http.Dir(config.AppInst.StaticDir))
 

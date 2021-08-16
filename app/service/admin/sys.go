@@ -4,7 +4,6 @@ import (
 	"errors"
 	"ginadmin/app/dto"
 	"ginadmin/app/model"
-	"ginadmin/app/repository"
 	"ginadmin/app/util"
 	"ginadmin/app/util/admin"
 	"ginadmin/app/util/page"
@@ -13,7 +12,9 @@ import (
 )
 
 
-type Sys struct{}
+type Sys struct{
+	base
+}
 
 
 func (*Sys) BindAdmUser(ctx *gin.Context) *vm.AdmUserVm {
@@ -42,7 +43,7 @@ func (*Sys) AdmUserVm2AdmUser(userVm *vm.AdmUserVm) *model.AdmUser {
 }
 
 // 更改密码
-func (*Sys) Password(ctx *gin.Context) (err error) {
+func (sys *Sys) Password(ctx *gin.Context) (err error) {
 	var vmAdmUser vm.AdmUserVm
 	err = ctx.ShouldBind(&vmAdmUser)
 	if err != nil {
@@ -55,8 +56,7 @@ func (*Sys) Password(ctx *gin.Context) (err error) {
 		return
 	}
 
-	repoAdmUser := repository.NewRepositoryAdmUser()
-	repoAdmUser.UpdatePasswordByAccount(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
+	sys.RepoAdmUser.UpdatePasswordByAccount(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
 
 	return
 }
@@ -94,9 +94,4 @@ func (*Sys) LogLogin(ctx *gin.Context, loginVm *vm.LogAdmUserLoginVm) (*page.Inf
 	}
 
 	return pageInfo, logAdmUserLoginDtos
-}
-
-
-func NewServiceSys() *Sys {
-	return &Sys{}
 }

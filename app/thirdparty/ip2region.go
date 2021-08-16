@@ -9,6 +9,7 @@ import (
 var region *ip2region.Ip2Region
 
 
+// 初始化 Ip2Region
 func IpInit(dbFile string)  {
 	var err error
 	region, err = ip2region.New(dbFile)
@@ -17,10 +18,12 @@ func IpInit(dbFile string)  {
 	}
 }
 
+// 关闭资源
 func IpClose() {
 	region.Close()
 }
 
+// 根据 ip 获取区域地址信息
 func IpAddress(ip string) string {
 	ipInfo, _ := region.MemorySearch(ip)
 

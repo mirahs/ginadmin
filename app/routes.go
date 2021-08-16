@@ -7,6 +7,7 @@ import (
 )
 
 
+// 初始化路由
 func initRoutes(engine *gin.Engine) {
 	adminG := engine.Group("/admin")
 	{

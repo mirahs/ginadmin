@@ -51,8 +51,3 @@ func (*AdmUser) UpdateIsLockedById(id uint32, isLocked uint8) {
 	var admUser model.AdmUser
 	model.Db.Model(admUser).Where("`id`=?", id).Update("is_locked", isLocked)
 }
-
-
-func NewRepositoryAdmUser() *AdmUser {
-	return &AdmUser{}
-}

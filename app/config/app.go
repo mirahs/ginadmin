@@ -53,7 +53,7 @@ var AppInst = &App{
 }
 
 
-// app参数设置(非零值就替换)
+// app参数设置(非零值替换)
 func AppSet(app *App) {
 	if app == nil {
 		return

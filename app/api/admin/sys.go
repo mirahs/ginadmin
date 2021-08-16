@@ -3,20 +3,14 @@ package admin
 import (
 	"ginadmin/app/config"
 	"ginadmin/app/dto"
-	"ginadmin/app/repository"
-	admin2 "ginadmin/app/service/admin"
 	"ginadmin/app/util"
 	"ginadmin/app/util/admin"
 	"ginadmin/app/vm"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"sort"
 )
-
-
-var serviceSys = admin2.NewServiceSys()
-var repoAdmUser = repository.NewRepositoryAdmUser()
-var repoLogAdmUserLogin = repository.NewRepositoryLogAdmUserLogin()
 
 
 func SysPassword(ctx *gin.Context)  {
@@ -43,7 +37,7 @@ func SysMasterNew(ctx *gin.Context) {
 
 	if ctx.Request.Method == "GET" {
 		if vmAdmUser.Id != 0 {
-			admUser := repoAdmUser.Get(vmAdmUser.Id)
+			admUser := serviceSys.RepoAdmUser.Get(vmAdmUser.Id)
 			context["data"] = admUser
 		}
 
@@ -54,6 +48,9 @@ func SysMasterNew(ctx *gin.Context) {
 				userTypeDescs = append(userTypeDescs, dto.ToUserType(key, val))
 			}
 		}
+		// config.AdminUserTypesDesc 是一个map, 转成切片的时候是无序的, 所以需要排序(用户类型从小到大)
+		sort.Sort(dto.UTDSlice(userTypeDescs))
+
 		context["user_types"] = userTypeDescs
 
 		ctx.HTML(http.StatusOK, "admin/sys/master_new.html", context)
@@ -65,10 +62,10 @@ func SysMasterNew(ctx *gin.Context) {
 
 		admUser := serviceSys.AdmUserVm2AdmUser(vmAdmUser)
 		if admUser.Id > 0 {
-			repoAdmUser.Update(admUser)
+			serviceSys.RepoAdmUser.Update(admUser)
 		} else {
 			admUser.Password = util.Md5(config.AppInst.DefaultPassword)
-			repoAdmUser.Add(admUser)
+			serviceSys.RepoAdmUser.Add(admUser)
 		}
 		util.GinSuccess(ctx)
 	}
@@ -82,7 +79,7 @@ func SysMasterList(ctx *gin.Context) {
 		if vmAdmUser.Id == admin.GetId(ctx) {
 			util.GinError(ctx,"不能删除自己")
 		} else {
-			repoAdmUser.DelById(vmAdmUser.Id)
+			serviceSys.RepoAdmUser.DelById(vmAdmUser.Id)
 			util.GinError(ctx,"删除成功")
 		}
 	case "lock":
@@ -90,7 +87,7 @@ func SysMasterList(ctx *gin.Context) {
 			util.GinError(ctx,"不能操作自己")
 		} else {
 			isLocked := uint8(util.If(vmAdmUser.IsLocked == 0, 1, 0).(int))
-			repoAdmUser.UpdateIsLockedById(vmAdmUser.Id, isLocked)
+			serviceSys.RepoAdmUser.UpdateIsLockedById(vmAdmUser.Id, isLocked)
 			util.GinRedirect(ctx)
 		}
 	default:
@@ -108,7 +105,7 @@ func SysLogLogin(ctx *gin.Context)  {
 	_ = ctx.ShouldBind(&vmUserLogin)
 
 	if vmUserLogin.Id != 0 {
-		repoLogAdmUserLogin.DelById(vmUserLogin.Id)
+		serviceSys.RepoLogAdmUserLogin.DelById(vmUserLogin.Id)
 		util.GinRedirect(ctx)
 		return
 	}

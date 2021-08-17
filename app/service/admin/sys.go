@@ -56,7 +56,19 @@ func (sys *Sys) Password(ctx *gin.Context) (err error) {
 		return
 	}
 
-	sys.RepoAdmUser.UpdatePasswordByAccount(vmAdmUser.Account, util.Md5(vmAdmUser.Password))
+	admUser := sys.RepoAdmUser.GetByAccount(vmAdmUser.Account)
+	if admUser.Id == 0 {
+		err = errors.New("账号不存在")
+		return
+	}
+
+	if admin.GetType(ctx) > admUser.Type {
+		// 不能改权限比自己高的(Type越小权限越高)
+		err = errors.New("权限不足")
+		return
+	}
+
+	sys.RepoAdmUser.Update(&model.AdmUser{Id: admUser.Id, Password: util.Md5(vmAdmUser.Password)})
 
 	return
 }

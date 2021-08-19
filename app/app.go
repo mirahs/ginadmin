@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"ginadmin/app/config"
 	"ginadmin/app/model"
 	"ginadmin/app/thirdparty"
@@ -27,5 +28,5 @@ func Start(app *config.App) {
 
 	initRoutes(engine)
 
-	panic(engine.Run())
+	panic(engine.Run(fmt.Sprintf(":%d", config.AppInst.GinPort)))
 }

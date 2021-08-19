@@ -1,7 +1,10 @@
 package config
 
+import "github.com/gin-gonic/gin"
 
 type App struct {
+	GinMode		  string //gin 模式(gin.DebugMode|gin.ReleaseMode|gin.TestMode)
+
 	MysqlHost     string //MySQL 主机
 	MysqlPort     int    //MySQL 端口
 	MysqlDatabase string //MySQL 数据库
@@ -28,6 +31,8 @@ type App struct {
 
 
 var AppInst = &App{
+	GinMode: gin.DebugMode,
+
 	MysqlHost:     "127.0.0.1",
 	MysqlPort:     3306,
 	MysqlDatabase: "ginadmin",
@@ -57,6 +62,10 @@ var AppInst = &App{
 func AppSet(app *App) {
 	if app == nil {
 		return
+	}
+
+	if app.GinMode == gin.DebugMode || app.GinMode == gin.ReleaseMode || app.GinMode == gin.TestMode {
+		AppInst.GinMode = app.GinMode
 	}
 
 	if app.MysqlHost != "" {

@@ -19,6 +19,7 @@ func Start(app *config.App) {
 	thirdparty.IpInit(config.AppInst.Ip2RegionDbFile)
 	defer thirdparty.IpClose()
 
+	gin.SetMode(app.GinMode)
 	engine := gin.Default()
 	// 模板引擎替换成 pongo2
 	engine.HTMLRender = pongo2gin.New(pongo2gin.RenderOptions{TemplateDir: config.AppInst.TemplateDir, ContentType: "text/html; charset=utf-8"})

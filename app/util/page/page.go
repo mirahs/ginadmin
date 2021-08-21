@@ -112,7 +112,13 @@ func getQuery(ctx *gin.Context) string {
 	query := ctx.Request.URL.Query()
 
 	for key, val := range query {
-		datas = append(datas, fmt.Sprintf("%s=%s", key, val[0]))
+		if key != "page" && key != "limit" {
+			datas = append(datas, fmt.Sprintf("%s=%s", key, val[0]))
+		}
+	}
+
+	if len(datas) == 0 {
+		return ""
 	}
 
 	return "&" + strings.Join(datas, "&")

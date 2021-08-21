@@ -8,8 +8,8 @@ import (
 )
 
 
-// 分页vm
-type vm struct {
+// 分页 vo
+type vo struct {
 	Page int `form:"page"` //当前页
 	Limit int `form:"limit"` //每页显示数量
 }
@@ -65,7 +65,7 @@ func work(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}, orde
 }
 
 func getPageLimit(ctx *gin.Context) (int, int) {
-	var v vm
+	var v vo
 
 	_ = ctx.ShouldBind(&v)
 

@@ -10,15 +10,14 @@ golang gin 管理后台模板
 * [layui](https://www.layui.com/)(前端UI框架)
 
 ## 配置
-* `MySQL`创建`ginadmin`或其它数据库
-* 修改`main.go`配置
+* 修改 `main.go` 配置(可以配置 `web 端口`、`MySQL信息`、`后台初始账号密码` 等)
+* `MySQL` 创建 `main.go` 配置的数据库, 默认 `ginadmin`
 
 ## 启动
-```shell
-go run main.go
-```
-或
 ```shell
 go build ginadmin
 ./ginadmin
 ```
+
+## 访问
+浏览器输入 `http://localhost:8080/admin/index/login`, 默认初始账号密码 `admin/admin`

@@ -1,10 +1,13 @@
 package config
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
+
 
 type App struct {
-	GinMode		  string //gin 模式(gin.DebugMode|gin.ReleaseMode|gin.TestMode) 默认 gin.DebugMode
-	GinPort		  int	 //gin 端口 默认 8080
+	GinMode string //gin 模式(gin.DebugMode|gin.ReleaseMode|gin.TestMode) 默认 gin.DebugMode
+	GinPort int    //gin 端口 默认 8080
 
 	MysqlHost     string //MySQL 主机 默认 127.0.0.1
 	MysqlPort     int    //MySQL 端口 默认 3306
@@ -16,6 +19,8 @@ type App struct {
 	InitPassword    string //初始后台管理员密码 默认 admin
 	DefaultPassword string //新建后台账号默认密码 默认 123456
 
+	StaticUrl string //静态资源地址 默认 /static/ 由 gin 负责提供静态资源, 以 http 开头如 http://res.ginadmin.com/static/ 为其它资源地址
+
 	TemplateDir string //模板目录 默认 ./app/template/
 	StaticDir   string //静态资源目录 默认 ./app/static/
 
@@ -24,10 +29,10 @@ type App struct {
 
 	Ip2RegionDbFile string //Ip2Region 数据文件 默认 ./app/ip2region.db
 
-	UrlLogin	string //登录url
-	UrlLogout	string //登录url
-	UrlIndex	string //主页url
-	UrlDeny		string //访问拒绝url
+	UrlLogin  string //登录url
+	UrlLogout string //登录url
+	UrlIndex  string //主页url
+	UrlDeny   string //访问拒绝url
 }
 
 
@@ -45,18 +50,20 @@ var AppInst = &App{
 	InitPassword:    "admin",
 	DefaultPassword: "123456",
 
+	StaticUrl: "/static/",
+
 	TemplateDir: "./app/template/",
 	StaticDir:   "./app/static/",
 
-	SessionName: "ginadmin_session",
+	SessionName:   "ginadmin_session",
 	SessionSecret: "ginadmin_secret",
 
 	Ip2RegionDbFile: "./app/ip2region.db",
 
-	UrlLogin: "/admin/index/login",
+	UrlLogin:  "/admin/index/login",
 	UrlLogout: "/admin/index/logout",
-	UrlIndex: "/admin/index/index",
-	UrlDeny: "/admin/index/deny",
+	UrlIndex:  "/admin/index/index",
+	UrlDeny:   "/admin/index/deny",
 }
 
 
@@ -97,6 +104,10 @@ func AppSet(app *App) {
 	}
 	if app.DefaultPassword != "" {
 		AppInst.DefaultPassword = app.DefaultPassword
+	}
+
+	if app.StaticUrl != "" {
+		AppInst.StaticUrl = app.StaticUrl
 	}
 
 	if app.TemplateDir != "" {

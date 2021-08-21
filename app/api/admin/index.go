@@ -12,7 +12,7 @@ import (
 
 // 主页
 func Index(ctx *gin.Context)  {
-	ctx.HTML(http.StatusOK, "admin/index/index.html", pongo2.Context{
+	admin.HTML(ctx, "admin/index/index.html", pongo2.Context{
 		"account":        admin.GetAccount(ctx),
 		"user_type_name": config.GetTypeName(admin.GetType(ctx)),
 		"menus":          menu.Get(admin.GetType(ctx)),
@@ -34,7 +34,7 @@ func IndexLogin(ctx *gin.Context)  {
 			ctx.Redirect(http.StatusFound, "index")
 			return
 		}
-		ctx.HTML(http.StatusOK, "admin/index/login.html", pongo2.Context{})
+		admin.HTML(ctx, "admin/index/login.html", nil)
 	}
 }
 
@@ -46,7 +46,7 @@ func IndexLogout(ctx *gin.Context) {
 
 // 访问拒绝
 func IndexDeny(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "admin/index/deny.html", pongo2.Context{
+	admin.HTML(ctx, "admin/index/deny.html", pongo2.Context{
 		"account": admin.GetAccount(ctx),
 	})
 }

@@ -15,6 +15,7 @@ type AdmUser struct {
 	LoginIp    string `gorm:"type:varchar(15); not null; default:''; comment:登录IP"`
 }
 
+
 // 设置表名，gorm 默认是复数形式
 func (user *AdmUser) TableName() string {
 	return "adm_user"

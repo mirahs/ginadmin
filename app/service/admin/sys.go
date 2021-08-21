@@ -7,7 +7,7 @@ import (
 	"ginadmin/app/util"
 	"ginadmin/app/util/admin"
 	"ginadmin/app/util/page"
-	"ginadmin/app/vm"
+	"ginadmin/app/vo"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,46 +17,46 @@ type Sys struct{
 }
 
 
-func (*Sys) BindAdmUser(ctx *gin.Context) *vm.AdmUserVm {
-	var vmAdmUser vm.AdmUserVm
-	_ = ctx.ShouldBind(&vmAdmUser)
-	return &vmAdmUser
+func (*Sys) BindAdmUser(ctx *gin.Context) *vo.AdmUserVo {
+	var voAdmUser vo.AdmUserVo
+	_ = ctx.ShouldBind(&voAdmUser)
+	return &voAdmUser
 }
 
-func (sys *Sys) AccountInfo(ctx *gin.Context) *vm.AdmUserVm {
-	vmAdmUser := sys.BindAdmUser(ctx)
+func (sys *Sys) AccountInfo(ctx *gin.Context) *vo.AdmUserVo {
+	voAdmUser := sys.BindAdmUser(ctx)
 
-	if vmAdmUser.Account == "" {
-		vmAdmUser.Account = admin.GetAccount(ctx)
+	if voAdmUser.Account == "" {
+		voAdmUser.Account = admin.GetAccount(ctx)
 	}
 
-	return vmAdmUser
+	return voAdmUser
 }
 
-func (*Sys) AdmUserVm2AdmUser(userVm *vm.AdmUserVm) *model.AdmUser {
+func (*Sys) AdmUserVo2AdmUser(userVo *vo.AdmUserVo) *model.AdmUser {
 	return &model.AdmUser{
-		Id:      userVm.Id,
-		Account: userVm.Account,
-		Type:    userVm.Type,
-		Remark:  userVm.Remark,
+		Id:      userVo.Id,
+		Account: userVo.Account,
+		Type:    userVo.Type,
+		Remark:  userVo.Remark,
 	}
 }
 
 // 更改密码
 func (sys *Sys) Password(ctx *gin.Context) (err error) {
-	var vmAdmUser vm.AdmUserVm
-	err = ctx.ShouldBind(&vmAdmUser)
+	var voAdmUser vo.AdmUserVo
+	err = ctx.ShouldBind(&voAdmUser)
 	if err != nil {
 		err = errors.New("参数解析错误:" + err.Error())
 		return
 	}
 
-	if vmAdmUser.Account == "" || vmAdmUser.Password == "" {
+	if voAdmUser.Account == "" || voAdmUser.Password == "" {
 		err = errors.New("账号和新密码不能为空")
 		return
 	}
 
-	admUser := sys.RepoAdmUser.GetByAccount(vmAdmUser.Account)
+	admUser := sys.RepoAdmUser.GetByAccount(voAdmUser.Account)
 	if admUser.Id == 0 {
 		err = errors.New("账号不存在")
 		return
@@ -68,7 +68,7 @@ func (sys *Sys) Password(ctx *gin.Context) (err error) {
 		return
 	}
 
-	sys.RepoAdmUser.Update(&model.AdmUser{Id: admUser.Id, Password: util.Md5(vmAdmUser.Password)})
+	sys.RepoAdmUser.Update(&model.AdmUser{Id: admUser.Id, Password: util.Md5(voAdmUser.Password)})
 
 	return
 }
@@ -90,12 +90,12 @@ func (*Sys) MasterList(ctx *gin.Context) (*page.Info, []*dto.AdmUserDto) {
 	return pageInfo, admUserDtos
 }
 
-func (*Sys) LogLogin(ctx *gin.Context, loginVm *vm.LogAdmUserLoginVm) (*page.Info, []*dto.LogAdmUserLoginDto) {
+func (*Sys) LogLogin(ctx *gin.Context, loginVo *vo.LogAdmUserLoginVo) (*page.Info, []*dto.LogAdmUserLoginDto) {
 	var userLogins = make([]model.LogAdmUserLogin, 0)
 	var wheres = make([][]interface{}, 0)
 
-	if loginVm.Account != "" {
-		wheres = append(wheres, []interface{}{"account", loginVm.Account})
+	if loginVo.Account != "" {
+		wheres = append(wheres, []interface{}{"account", loginVo.Account})
 	}
 
 	pageInfo := page.PageWhereOrder(ctx, &userLogins, wheres, "`id` DESC")

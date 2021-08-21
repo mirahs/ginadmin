@@ -12,6 +12,7 @@ var (
 )
 
 
+// 获取用户类型名称
 func GetTypeName(userType uint8) string {
 	userName, _ := AdminUserTypesDesc[userType]
 	return userName

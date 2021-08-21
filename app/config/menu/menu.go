@@ -102,10 +102,12 @@ func init() {
 	}
 }
 
+// 获取用户类型对应的菜单数据
 func Get(userType uint8) []*Menu {
 	return userTypeMenus[userType]
 }
 
+// 检查路由能否访问
 func Check(path string, userType uint8) bool {
 	keys, ok := pathKeys[path]
 	if !ok {

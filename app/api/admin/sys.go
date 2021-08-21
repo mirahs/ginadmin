@@ -5,7 +5,7 @@ import (
 	"ginadmin/app/dto"
 	"ginadmin/app/util"
 	"ginadmin/app/util/admin"
-	"ginadmin/app/vm"
+	"ginadmin/app/vo"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,6 +13,7 @@ import (
 )
 
 
+// 修改密码
 func SysPassword(ctx *gin.Context)  {
 	if ctx.Request.Method == "POST" {
 		err := serviceSys.Password(ctx)
@@ -23,21 +24,22 @@ func SysPassword(ctx *gin.Context)  {
 
 		ctx.JSON(http.StatusOK, gin.H{"code": 1})
 	} else {
-		vmAdmUser := serviceSys.AccountInfo(ctx)
+		voAdmUser := serviceSys.AccountInfo(ctx)
 
-		ctx.HTML(http.StatusOK, "admin/sys/password.html", pongo2.Context{
-			"account": vmAdmUser.Account,
+		admin.HTML(ctx, "admin/sys/password.html", pongo2.Context{
+			"account": voAdmUser.Account,
 		})
 	}
 }
 
+// 添加管理员
 func SysMasterNew(ctx *gin.Context) {
-	vmAdmUser := serviceSys.BindAdmUser(ctx)
+	voAdmUser := serviceSys.BindAdmUser(ctx)
 	context := pongo2.Context{}
 
 	if ctx.Request.Method == "GET" {
-		if vmAdmUser.Id != 0 {
-			admUser := serviceSys.RepoAdmUser.Get(vmAdmUser.Id)
+		if voAdmUser.Id != 0 {
+			admUser := serviceSys.RepoAdmUser.Get(voAdmUser.Id)
 			context["data"] = admUser
 		}
 
@@ -53,14 +55,14 @@ func SysMasterNew(ctx *gin.Context) {
 
 		context["user_types"] = userTypeDescs
 
-		ctx.HTML(http.StatusOK, "admin/sys/master_new.html", context)
+		admin.HTML(ctx, "admin/sys/master_new.html", context)
 	} else {
-		if vmAdmUser.Account == "" || vmAdmUser.Type == 0 || vmAdmUser.Remark == "" {
+		if voAdmUser.Account == "" || voAdmUser.Type == 0 || voAdmUser.Remark == "" {
 			util.GinError(ctx, "请输入正确的数据")
 			return
 		}
 
-		admUser := serviceSys.AdmUserVm2AdmUser(vmAdmUser)
+		admUser := serviceSys.AdmUserVo2AdmUser(voAdmUser)
 		if admUser.Id > 0 {
 			serviceSys.RepoAdmUser.Update(admUser)
 		} else {
@@ -71,49 +73,51 @@ func SysMasterNew(ctx *gin.Context) {
 	}
 }
 
+// 管理员列表
 func SysMasterList(ctx *gin.Context) {
-	vmAdmUser := serviceSys.BindAdmUser(ctx)
+	voAdmUser := serviceSys.BindAdmUser(ctx)
 
 	switch ctx.Query("act") {
 	case "del":
-		if vmAdmUser.Id == admin.GetId(ctx) {
+		if voAdmUser.Id == admin.GetId(ctx) {
 			util.GinError(ctx,"不能删除自己")
 		} else {
-			serviceSys.RepoAdmUser.DelById(vmAdmUser.Id)
+			serviceSys.RepoAdmUser.DelById(voAdmUser.Id)
 			util.GinError(ctx,"删除成功")
 		}
 	case "lock":
-		if vmAdmUser.Id == admin.GetId(ctx) {
+		if voAdmUser.Id == admin.GetId(ctx) {
 			util.GinError(ctx,"不能操作自己")
 		} else {
-			isLocked := uint8(util.If(vmAdmUser.IsLocked == 0, 1, 0).(int))
-			serviceSys.RepoAdmUser.UpdateIsLockedById(vmAdmUser.Id, isLocked)
+			isLocked := uint8(util.If(voAdmUser.IsLocked == 0, 1, 0).(int))
+			serviceSys.RepoAdmUser.UpdateIsLockedById(voAdmUser.Id, isLocked)
 			util.GinRedirect(ctx)
 		}
 	default:
 		pageInfo, admUsers := serviceSys.MasterList(ctx)
 
-		ctx.HTML(http.StatusOK, "admin/sys/master_list.html", pongo2.Context{
+		admin.HTML(ctx, "admin/sys/master_list.html", pongo2.Context{
 			"page": pageInfo,
 			"datas": admUsers,
 		})
 	}
 }
 
+// 用户登录日志
 func SysLogLogin(ctx *gin.Context)  {
-	var vmUserLogin vm.LogAdmUserLoginVm
-	_ = ctx.ShouldBind(&vmUserLogin)
+	var voUserLogin vo.LogAdmUserLoginVo
+	_ = ctx.ShouldBind(&voUserLogin)
 
-	if vmUserLogin.Id != 0 {
-		serviceSys.RepoLogAdmUserLogin.DelById(vmUserLogin.Id)
+	if voUserLogin.Id != 0 {
+		serviceSys.RepoLogAdmUserLogin.DelById(voUserLogin.Id)
 		util.GinRedirect(ctx)
 		return
 	}
 
-	pageInfo, logLogins := serviceSys.LogLogin(ctx, &vmUserLogin)
+	pageInfo, logLogins := serviceSys.LogLogin(ctx, &voUserLogin)
 
-	ctx.HTML(http.StatusOK, "admin/sys/log_login.html", pongo2.Context{
-		"account": vmUserLogin.Account,
+	admin.HTML(ctx, "admin/sys/log_login.html", pongo2.Context{
+		"account": voUserLogin.Account,
 		"page": pageInfo,
 		"datas": logLogins,
 	})

@@ -12,7 +12,7 @@ import (
 var Db *gorm.DB
 
 
-// gorm初始化
+// gorm 初始化
 func DbInit() {
 	var err error
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",

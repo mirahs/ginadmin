@@ -1,7 +1,7 @@
-package vm
+package vo
 
 
-type AdmUserVm struct {
+type AdmUserVo struct {
 	Id uint32 `form:"id"` //Id
 	Account string `form:"account"` //账号
 	Password string `form:"password"` //密码

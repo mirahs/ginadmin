@@ -11,6 +11,7 @@ type LogAdmUserLogin struct {
 	Remark  string `gorm:"type:varchar(32); not null; comment:备注"`
 }
 
+
 // 设置表名，gorm 默认是复数形式
 func (user *LogAdmUserLogin) TableName() string {
 	return "log_adm_user_login"

@@ -20,9 +20,9 @@ type App struct {
 	DefaultPassword string //新建后台账号默认密码 默认 123456
 
 	StaticUrl string //静态资源地址 默认 /static/ 由 gin 负责提供静态资源, 以 http 开头如 http://res.ginadmin.com/static/ 为其它资源地址
+	StaticDir string //静态资源目录 默认 ./app/static/ 当 StaticUrl 不以 http 开头才需要配置并且生效
 
 	TemplateDir string //模板目录 默认 ./app/template/
-	StaticDir   string //静态资源目录 默认 ./app/static/
 
 	SessionName   string //session 名称
 	SessionSecret string //session 加密密钥
@@ -51,9 +51,9 @@ var AppInst = &App{
 	DefaultPassword: "123456",
 
 	StaticUrl: "/static/",
+	StaticDir: "./app/static/",
 
 	TemplateDir: "./app/template/",
-	StaticDir:   "./app/static/",
 
 	SessionName:   "ginadmin_session",
 	SessionSecret: "ginadmin_secret",
@@ -109,12 +109,12 @@ func AppSet(app *App) {
 	if app.StaticUrl != "" {
 		AppInst.StaticUrl = app.StaticUrl
 	}
+	if app.StaticDir != "" {
+		AppInst.StaticDir = app.StaticDir
+	}
 
 	if app.TemplateDir != "" {
 		AppInst.TemplateDir = app.TemplateDir
-	}
-	if app.StaticDir != "" {
-		AppInst.StaticDir = app.StaticDir
 	}
 
 	if app.SessionName != "" {

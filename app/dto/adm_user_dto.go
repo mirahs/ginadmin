@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"ginadmin/app/config"
+	"ginadmin/app/common"
 	"ginadmin/app/model"
 	"ginadmin/app/util"
 )
@@ -29,7 +29,7 @@ func ToAdmUser(user *model.AdmUser) *AdmUserDto {
 		Id:       user.Id,
 		Account:  user.Account,
 		Type:     user.Type,
-		TypeDesc: config.AdminUserTypesDesc[user.Type],
+		TypeDesc: common.AdminUserTypesDesc[user.Type],
 
 		IsLocked:     user.IsLocked,
 		IsLockedDesc: util.If(user.IsLocked == 0, "锁住", "解锁").(string),

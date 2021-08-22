@@ -1,11 +1,12 @@
 package admin
 
 import (
-	"ginadmin/app/config"
+	"ginadmin/app/common"
 	"ginadmin/app/dto"
 	"ginadmin/app/util"
 	"ginadmin/app/util/admin"
 	"ginadmin/app/vo"
+	"ginadmin/config"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -45,12 +46,12 @@ func SysMasterNew(ctx *gin.Context) {
 
 		userType := admin.GetType(ctx)
 		var userTypeDescs []*dto.UserTypeDescDto
-		for key, val := range config.AdminUserTypesDesc {
+		for key, val := range common.AdminUserTypesDesc {
 			if key >= userType {
 				userTypeDescs = append(userTypeDescs, dto.ToUserType(key, val))
 			}
 		}
-		// config.AdminUserTypesDesc 是一个map, 转成切片的时候是无序的, 所以需要排序(用户类型从小到大)
+		// common.AdminUserTypesDesc 是一个map, 转成切片的时候是无序的, 所以需要排序(用户类型从小到大)
 		sort.Sort(dto.UTDSlice(userTypeDescs))
 
 		context["user_types"] = userTypeDescs
@@ -66,7 +67,7 @@ func SysMasterNew(ctx *gin.Context) {
 		if admUser.Id > 0 {
 			serviceSys.RepoAdmUser.Update(admUser)
 		} else {
-			admUser.Password = util.Md5(config.AppInst.DefaultPassword)
+			admUser.Password = util.Md5(config.App.DefaultPassword)
 			serviceSys.RepoAdmUser.Add(admUser)
 		}
 		util.GinSuccess(ctx)

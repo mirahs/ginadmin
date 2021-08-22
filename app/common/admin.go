@@ -1,19 +1,14 @@
-package config
+package common
 
 
-var (
+const (
 	AdminUserTypeAdmin uint8 = 10
 	AdminUserTypeGuest uint8 = 20
+)
 
+var (
 	AdminUserTypesDesc = map[uint8]string{
 		AdminUserTypeAdmin: "管理员",
 		AdminUserTypeGuest: "游客",
 	}
 )
-
-
-// 获取用户类型名称
-func GetTypeName(userType uint8) string {
-	userName, _ := AdminUserTypesDesc[userType]
-	return userName
-}

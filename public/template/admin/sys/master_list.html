@@ -44,8 +44,8 @@
 
 
 {% block body_js %}
-<script src="/static/js/app.js"></script>
-<script src="/static/layui/layui.js"></script>
+<script src="{{ static_url }}js/app.js"></script>
+<script src="{{ static_url }}layui/layui.js"></script>
 <script type="text/javascript">
     layui.use(['laypage'], function () {
         const laypage = layui.laypage;

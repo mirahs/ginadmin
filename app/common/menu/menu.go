@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"ginadmin/app/config"
+	"ginadmin/app/common"
 	"github.com/unknwon/com"
 )
 
@@ -40,7 +40,7 @@ var (
 
 // 初始化菜单数据
 func init() {
-	for userType, _ := range config.AdminUserTypesDesc {
+	for userType, _ := range common.AdminUserTypesDesc {
 		var userMenus []*Menu
 
 		for _, menu := range menus {

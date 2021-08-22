@@ -1,8 +1,8 @@
 package admin
 
 import (
-	"ginadmin/app/config"
-	"ginadmin/app/config/menu"
+	"ginadmin/app/common"
+	"ginadmin/app/common/menu"
 	"ginadmin/app/util/admin"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
@@ -14,7 +14,7 @@ import (
 func Index(ctx *gin.Context)  {
 	admin.HTML(ctx, "admin/index/index.html", pongo2.Context{
 		"account":        admin.GetAccount(ctx),
-		"user_type_name": config.GetTypeName(admin.GetType(ctx)),
+		"user_type_name": common.AdminUserTypesDesc[admin.GetType(ctx)],
 		"menus":          menu.Get(admin.GetType(ctx)),
 	})
 }

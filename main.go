@@ -7,7 +7,7 @@ import (
 
 
 func main() {
-	config.Load("./public/app.ini")
+	config.Load("./app.ini")
 
 	app.Start()
 }

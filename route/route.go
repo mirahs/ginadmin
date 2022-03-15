@@ -1,18 +1,20 @@
-package main
+package route
 
 import (
 	"ginadmin/api/admin"
+	"ginadmin/conf"
 	"ginadmin/middleware"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
 )
 
 
 // 初始化路由
-func initRoutes(engine *gin.Engine) {
+func Init(engine *gin.Engine) {
 	adminG := engine.Group("/admin")
+	initSession(adminG)
 	{
-		initSession(adminG)
-
 		adminG.Use(middleware.AdminValidate())
 
 		adminG.GET("/index/index", admin.Index)
@@ -30,4 +32,13 @@ func initRoutes(engine *gin.Engine) {
 		adminG.GET("/sys/master_list", admin.SysMasterList)
 		adminG.GET("/sys/log_login", admin.SysLogLogin)
 	}
+}
+
+
+// 初始化 session
+func initSession(group *gin.RouterGroup) {
+	store := memstore.NewStore([]byte(conf.App.SessionSecret))
+	store.Options(sessions.Options{Path: group.BasePath()})
+
+	group.Use(sessions.Sessions(conf.App.SessionName, store))
 }

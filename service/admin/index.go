@@ -2,7 +2,6 @@ package admin
 
 import (
 	"errors"
-	"ginadmin/thirdparty"
 	"ginadmin/util"
 	"ginadmin/util/admin"
 	"ginadmin/vo"
@@ -30,7 +29,7 @@ func (index *Index) Login(ctx *gin.Context) (err error)  {
 	}
 
 	ip := ctx.ClientIP()
-	address := thirdparty.IpAddress(ip)
+	address := util.IpAddress(ip)
 
 	var remark string
 

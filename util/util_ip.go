@@ -1,4 +1,4 @@
-package thirdparty
+package util
 
 import (
 	"fmt"

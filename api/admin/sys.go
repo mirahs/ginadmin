@@ -2,7 +2,7 @@ package admin
 
 import (
 	"ginadmin/common"
-	"ginadmin/config"
+	"ginadmin/conf"
 	"ginadmin/dto"
 	"ginadmin/util"
 	"ginadmin/util/admin"
@@ -67,7 +67,7 @@ func SysMasterNew(ctx *gin.Context) {
 		if admUser.Id > 0 {
 			serviceSys.RepoAdmUser.Update(admUser)
 		} else {
-			admUser.Password = util.Md5(config.App.DefaultPassword)
+			admUser.Password = util.Md5(conf.App.DefaultPassword)
 			serviceSys.RepoAdmUser.Add(admUser)
 		}
 		util.GinSuccess(ctx)

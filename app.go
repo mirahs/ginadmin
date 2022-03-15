@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"ginadmin/config"
+	"ginadmin/conf"
 	"ginadmin/model"
 	"ginadmin/thirdparty"
 	"ginadmin/thirdparty/pongo2gin"
@@ -16,19 +16,19 @@ import (
 func Start() {
 	model.DbInit()
 
-	thirdparty.IpInit(config.App.Ip2RegionDbFile)
+	thirdparty.IpInit(conf.App.Ip2RegionDbFile)
 	defer thirdparty.IpClose()
 
-	gin.SetMode(config.App.GinMode)
+	gin.SetMode(conf.App.GinMode)
 	engine := gin.Default()
 	// 模板引擎使用 pongo2
-	engine.HTMLRender = pongo2gin.New(pongo2gin.RenderOptions{TemplateDir: config.App.TemplateDir, ContentType: "text/html; charset=utf-8"})
+	engine.HTMLRender = pongo2gin.New(pongo2gin.RenderOptions{TemplateDir: conf.App.TemplateDir, ContentType: "text/html; charset=utf-8"})
 	// 静态资源不是网络地址则 gin 负责提供静态资源访问
-	if !strings.HasPrefix(config.App.StaticUrl, "http") {
-		engine.StaticFS(config.App.StaticUrl, http.Dir(config.App.StaticDir))
+	if !strings.HasPrefix(conf.App.StaticUrl, "http") {
+		engine.StaticFS(conf.App.StaticUrl, http.Dir(conf.App.StaticDir))
 	}
 
 	initRoutes(engine)
 
-	panic(engine.Run(fmt.Sprintf(":%d", config.App.GinPort)))
+	panic(engine.Run(fmt.Sprintf(":%d", conf.App.GinPort)))
 }

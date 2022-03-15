@@ -2,7 +2,7 @@ package admin
 
 import (
 	"ginadmin/common"
-	"ginadmin/config"
+	"ginadmin/conf"
 	"ginadmin/model"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-contrib/sessions"
@@ -56,7 +56,7 @@ func HTML(ctx *gin.Context, tplPath string, obj pongo2.Context)  {
 		obj = pongo2.Context{}
 	}
 
-	obj["static_url"] = config.App.StaticUrl
+	obj["static_url"] = conf.App.StaticUrl
 
 	ctx.HTML(http.StatusOK, tplPath, obj)
 }

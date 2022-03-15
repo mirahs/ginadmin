@@ -1,9 +1,9 @@
 package admin
 
 import (
-	"ginadmin/app/common"
-	"ginadmin/app/model"
+	"ginadmin/common"
 	"ginadmin/config"
+	"ginadmin/model"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

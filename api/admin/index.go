@@ -1,9 +1,9 @@
 package admin
 
 import (
-	"ginadmin/app/common"
-	"ginadmin/app/common/menu"
-	"ginadmin/app/util/admin"
+	"ginadmin/common"
+	"ginadmin/common/menu"
+	"ginadmin/util/admin"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"

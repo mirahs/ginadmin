@@ -1,6 +1,6 @@
 package admin
 
-import "ginadmin/app/service/admin"
+import "ginadmin/service/admin"
 
 
 // 所有 service, 控制器直接访问

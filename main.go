@@ -1,7 +1,6 @@
 package main
 
 import (
-	"ginadmin/app"
 	"ginadmin/config"
 )
 
@@ -9,5 +8,5 @@ import (
 func main() {
 	config.Load("./app.ini")
 
-	app.Start()
+	Start()
 }

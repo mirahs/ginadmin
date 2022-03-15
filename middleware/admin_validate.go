@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"ginadmin/app/common/menu"
-	"ginadmin/app/util/admin"
+	"ginadmin/common/menu"
 	"ginadmin/config"
+	"ginadmin/util/admin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

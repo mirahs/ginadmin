@@ -1,9 +1,9 @@
 package dto
 
 import (
-	"ginadmin/app/common"
-	"ginadmin/app/model"
-	"ginadmin/app/util"
+	"ginadmin/common"
+	"ginadmin/model"
+	"ginadmin/util"
 )
 
 

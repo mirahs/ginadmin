@@ -1,6 +1,6 @@
 package admin
 
-import "ginadmin/app/repository"
+import "ginadmin/repository"
 
 
 // 所有 repository, service 直接访问, 控制器通过 service 间接访问

@@ -2,9 +2,9 @@ package model
 
 import (
 	"fmt"
-	"ginadmin/app/common"
-	"ginadmin/app/util"
+	"ginadmin/common"
 	"ginadmin/config"
+	"ginadmin/util"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

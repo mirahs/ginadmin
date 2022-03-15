@@ -1,7 +1,7 @@
 package menu
 
 import (
-	"ginadmin/app/common"
+	"ginadmin/common"
 	"github.com/unknwon/com"
 )
 

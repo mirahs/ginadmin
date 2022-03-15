@@ -1,11 +1,11 @@
-package app
+package main
 
 import (
 	"fmt"
-	"ginadmin/app/model"
-	"ginadmin/app/thirdparty"
-	"ginadmin/app/thirdparty/pongo2gin"
 	"ginadmin/config"
+	"ginadmin/model"
+	"ginadmin/thirdparty"
+	"ginadmin/thirdparty/pongo2gin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"

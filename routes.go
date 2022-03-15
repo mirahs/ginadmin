@@ -1,8 +1,8 @@
-package app
+package main
 
 import (
-	"ginadmin/app/api/admin"
-	"ginadmin/app/middleware"
+	"ginadmin/api/admin"
+	"ginadmin/middleware"
 	"github.com/gin-gonic/gin"
 )
 

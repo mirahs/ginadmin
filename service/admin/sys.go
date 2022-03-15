@@ -2,12 +2,12 @@ package admin
 
 import (
 	"errors"
-	"ginadmin/app/dto"
-	"ginadmin/app/model"
-	"ginadmin/app/util"
-	"ginadmin/app/util/admin"
-	"ginadmin/app/util/page"
-	"ginadmin/app/vo"
+	"ginadmin/dto"
+	"ginadmin/model"
+	"ginadmin/util"
+	"ginadmin/util/admin"
+	"ginadmin/util/page"
+	"ginadmin/vo"
 	"github.com/gin-gonic/gin"
 )
 

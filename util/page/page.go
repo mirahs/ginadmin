@@ -2,7 +2,7 @@ package page
 
 import (
 	"fmt"
-	"ginadmin/app/model"
+	"ginadmin/model"
 	"github.com/gin-gonic/gin"
 	"strings"
 )

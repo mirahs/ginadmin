@@ -1,12 +1,12 @@
 package admin
 
 import (
-	"ginadmin/app/common"
-	"ginadmin/app/dto"
-	"ginadmin/app/util"
-	"ginadmin/app/util/admin"
-	"ginadmin/app/vo"
+	"ginadmin/common"
 	"ginadmin/config"
+	"ginadmin/dto"
+	"ginadmin/util"
+	"ginadmin/util/admin"
+	"ginadmin/vo"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
 	"net/http"

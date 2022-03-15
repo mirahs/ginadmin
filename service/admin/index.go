@@ -2,10 +2,10 @@ package admin
 
 import (
 	"errors"
-	"ginadmin/app/thirdparty"
-	"ginadmin/app/util"
-	"ginadmin/app/util/admin"
-	"ginadmin/app/vo"
+	"ginadmin/thirdparty"
+	"ginadmin/util"
+	"ginadmin/util/admin"
+	"ginadmin/vo"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )

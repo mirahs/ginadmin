@@ -7,21 +7,27 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 
 // 初始化路由
 func Init(engine *gin.Engine) {
+	engine.GET("/", func(context *gin.Context) {
+		context.Redirect(http.StatusPermanentRedirect, conf.App.UrlIndex)
+	})
+
 	adminG := engine.Group("/admin")
-	initSession(adminG)
 	{
+		initSession(adminG)
+
 		adminG.Use(middleware.AdminValidate())
 
-		adminG.GET("/index/index", admin.Index)
-		adminG.GET("/index/login", admin.IndexLogin)
-		adminG.POST("/index/login", admin.IndexLogin)
-		adminG.GET("/index/logout", admin.IndexLogout)
-		adminG.GET("/index/deny", admin.IndexDeny)
+		adminG.GET("/", admin.Index)
+		adminG.GET("/login", admin.Login)
+		adminG.POST("/login", admin.Login)
+		adminG.GET("/logout", admin.Logout)
+		adminG.GET("/deny", admin.Deny)
 
 		adminG.GET("/home/welcome", admin.HomeWelcome)
 

@@ -3,6 +3,7 @@ package admin
 import (
 	"ginadmin/common"
 	"ginadmin/common/menu"
+	"ginadmin/conf"
 	"ginadmin/util/admin"
 	"github.com/flosch/pongo2/v4"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ func Index(ctx *gin.Context)  {
 }
 
 // 登录
-func IndexLogin(ctx *gin.Context)  {
+func Login(ctx *gin.Context)  {
 	if ctx.Request.Method == "POST" {
 		err := serviceIndex.Login(ctx)
 		if err != nil {
@@ -31,7 +32,7 @@ func IndexLogin(ctx *gin.Context)  {
 		ctx.JSON(http.StatusOK, gin.H{"code": 1})
 	} else {
 		if admin.LoginCheck(ctx) {
-			ctx.Redirect(http.StatusFound, "index")
+			ctx.Redirect(http.StatusFound, conf.App.UrlIndex)
 			return
 		}
 		admin.HTML(ctx, "admin/index/login.html", nil)
@@ -39,13 +40,13 @@ func IndexLogin(ctx *gin.Context)  {
 }
 
 // 退出
-func IndexLogout(ctx *gin.Context) {
+func Logout(ctx *gin.Context) {
 	serviceIndex.Logout(ctx)
 	ctx.Redirect(http.StatusFound, "login")
 }
 
 // 访问拒绝
-func IndexDeny(ctx *gin.Context) {
+func Deny(ctx *gin.Context) {
 	admin.HTML(ctx, "admin/index/deny.html", pongo2.Context{
 		"account": admin.GetAccount(ctx),
 	})

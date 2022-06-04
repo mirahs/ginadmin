@@ -37,7 +37,7 @@ func (index *Index) Login(ctx *gin.Context) (err error)  {
 	if admUser.Id == 0 {
 		remark = "账号不存在"
 		err = errors.New(remark)
-		index.RepoLogAdmUserLogin.AddFailed(voAdmUser.Account, ip, address, remark)
+		index.RepoLogAdmUserLogin.AddFailed(admUser.Id, ip, address, remark)
 		return
 	}
 
@@ -45,14 +45,14 @@ func (index *Index) Login(ctx *gin.Context) (err error)  {
 	if passwordMd5 != admUser.Password {
 		remark = "密码错误"
 		err = errors.New(remark)
-		index.RepoLogAdmUserLogin.AddFailed(voAdmUser.Account, ip, address, remark)
+		index.RepoLogAdmUserLogin.AddFailed(admUser.Id, ip, address, remark)
 		return
 	}
 
 	admin.LoginSessionSet(ctx, admUser)
 
 	index.RepoAdmUser.LoginUpdate(admUser, ip)
-	index.RepoLogAdmUserLogin.AddSuccess(voAdmUser.Account, ip, address, remark)
+	index.RepoLogAdmUserLogin.AddSuccess(admUser.Id, ip, address, remark)
 
 	return
 }

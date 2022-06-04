@@ -5,6 +5,7 @@ import (
 	"ginadmin/common"
 	"ginadmin/conf"
 	"ginadmin/util"
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
@@ -14,7 +15,7 @@ import (
 var Db *gorm.DB
 
 
-// gorm 初始化
+// Init gorm 初始化
 func Init() {
 	var err error
 
@@ -48,7 +49,7 @@ func Init() {
 		panic("db.Init AutoMigrate err:" + err.Error())
 	}
 
-	// 如果启动时 adm_user 表不存在就创建初始化管理员账号(登录后记得改密码或者删除这个账号)
+	// todo: 如果启动时 adm_user 表不存在就创建初始化管理员账号(登录后记得改密码或者删除这个账号)
 	if !hasAdmUser {
 		Db.Create(&AdmUser{
 			Account:  conf.App.InitAccount,
@@ -56,6 +57,11 @@ func Init() {
 			Type:     common.AdminUserTypeAdmin,
 			Remark:   conf.App.InitAccount,
 		})
+	}
+
+	// 开发模式开启 gorm 调试
+	if conf.App.GinMode == gin.DebugMode {
+		Db = Db.Debug()
 	}
 }
 

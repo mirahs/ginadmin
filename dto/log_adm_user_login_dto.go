@@ -20,7 +20,7 @@ type LogAdmUserLoginDto struct {
 func ToLogAdmUserLogin(login *model.LogAdmUserLogin) *LogAdmUserLoginDto {
 	return &LogAdmUserLoginDto{
 		Id:         login.Id,
-		Account:    login.Account,
+		Account:    login.AdmUser.Account,
 		TimeDesc:   util.Time2Datetime(int64(login.Time)),
 		StatusDesc: util.If(login.Status == 0, "失败", "成功").(string),
 		Ip:         login.Ip,

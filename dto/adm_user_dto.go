@@ -36,8 +36,8 @@ func ToAdmUser(user *model.AdmUser) *AdmUserDto {
 		Remark:       user.Remark,
 
 		LoginTimes:    user.LoginTimes,
-		LoginTime:     user.LoginTime,
-		LoginTimeDesc: util.Time2Datetime(int64(user.LoginTime)),
+		LoginTime:     user.LoginAt,
+		LoginTimeDesc: util.Time2Datetime(int64(user.LoginAt)),
 		LoginIp:       user.LoginIp,
 	}
 }

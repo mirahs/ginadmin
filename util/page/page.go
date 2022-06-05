@@ -2,110 +2,97 @@ package page
 
 import (
 	"fmt"
-	"ginadmin/model"
+	"ginadmin/util"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"strings"
 )
 
 
-// 分页 vo
-type vo struct {
-	Page int `form:"page"` //当前页
-	Limit int `form:"limit"` //每页显示数量
+type Param struct {
+	Ctx *gin.Context
+	Db  *gorm.DB
+
+	Datas interface{}
+	Fields []string
+
+	Preloads [][]interface{}
+
+	Distincts []interface{}
+
+	Wheres [][]interface{}
+	Ors    [][]interface{}
+
+	Groups  []string
+	Havings [][]interface{}
+
+	Orders []string
 }
 
-// 分页信息
 type Info struct {
-	Curr int
+	Page int
 	Limit int
 	Count int64
 	Query string
 }
 
 
-func Page(ctx *gin.Context, modelDatas interface{}) *Info {
-	var wheres [][]interface{}
-	return work(ctx, modelDatas, wheres, "")
-}
+func Page(param *Param) (*Info, error) {
+	db := param.Db
 
-func PageWhere(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}) *Info {
-	return work(ctx, modelDatas, wheres, "")
-}
-
-func PageWhereOrder(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}, order string) *Info {
-	return work(ctx, modelDatas, wheres, order)
-}
-
-
-func work(ctx *gin.Context, modelDatas interface{}, wheres [][]interface{}, order string) *Info {
-	db := model.Db
-
-	if len(wheres) > 0 {
-		sqlFormat, args := whereBuild(wheres)
-		db = db.Where(sqlFormat, args...)
+	if len(param.Fields) > 0 {
+		db = db.Select(param.Fields)
 	}
 
-	if order != "" {
+	for _, preload := range param.Preloads {
+		if len(preload) >= 1 {
+			db = db.Preload(preload[0].(string), preload[1:]...)
+		}
+	}
+
+	if len(param.Distincts) > 0 {
+		db = db.Distinct(param.Distincts...)
+	}
+
+	for _, where := range param.Wheres {
+		if len(where) >= 1 {
+			db = db.Where(where[0], where[1:]...)
+		}
+	}
+
+	for _, or := range param.Ors {
+		if len(or) >= 1 {
+			db = db.Or(or[0], or[1:]...)
+		}
+	}
+
+	for _, group := range param.Groups {
+		db = db.Group(group)
+	}
+
+	for _, having := range param.Havings {
+		if len(having) >= 1 {
+			db = db.Having(having[0], having[1:]...)
+		}
+	}
+
+	for _, order := range param.Orders {
 		db = db.Order(order)
 	}
 
-	page, limit := getPageLimit(ctx)
+
+	page, pageSize := util.PageInfo(param.Ctx)
 
 	var count int64
-	db.Model(modelDatas).Count(&count)
 
-	db.Offset((page - 1) * limit).Limit(limit).Find(modelDatas)
-
-	return &Info{
-		Curr:  page,
-		Limit: limit,
-		Count: count,
-		Query: getQuery(ctx),
+	err := db.Model(param.Datas).Count(&count).Offset((page - 1) * pageSize).Limit(pageSize).Find(param.Datas).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
 	}
+
+	return &Info{Page: page, Limit: pageSize, Count: count, Query: getQuery(param.Ctx)}, err
 }
 
-func getPageLimit(ctx *gin.Context) (int, int) {
-	var v vo
-
-	_ = ctx.ShouldBind(&v)
-
-	if v.Page <= 0 {
-		v.Page = 1
-	}
-	if v.Limit <= 0 {
-		v.Limit = 10
-	}
-
-	return v.Page, v.Limit
-}
-
-func whereBuild(wheres [][]interface{}) (sqlFormat string, args []interface{}) {
-	for _, vals := range wheres {
-		if len(vals) != 3 && len(vals) != 2 {
-			panic(fmt.Errorf("error in query condition:%v", vals))
-		}
-
-		if sqlFormat != "" {
-			sqlFormat += " AND "
-		}
-
-		switch len(vals) {
-		case 2:
-			sqlFormat += fmt.Sprintf("`%s`=?", vals[0])
-			args = append(args, vals[1])
-		case 3:
-			switch vals[1] {
-			case "in", "IN", "iN", "In":
-				sqlFormat += fmt.Sprintf("`%s` IN (?)", vals[0])
-			default:
-				sqlFormat += fmt.Sprintf("`%s` %s ?", vals[0], vals[1])
-			}
-			args = append(args, vals[2])
-		}
-	}
-
-	return sqlFormat, args
-}
 
 func getQuery(ctx *gin.Context) string {
 	var datas []string

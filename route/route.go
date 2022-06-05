@@ -1,7 +1,7 @@
 package route
 
 import (
-	"ginadmin/api/admin"
+	"ginadmin/api"
 	"ginadmin/conf"
 	"ginadmin/middleware"
 	"ginadmin/thirdparty/pongo2gin"
@@ -17,30 +17,26 @@ import (
 func Init() *gin.Engine {
 	engine := initEngine()
 
-	engine.GET("/", func(context *gin.Context) {
-		context.Redirect(http.StatusPermanentRedirect, conf.App.UrlIndex)
-	})
-
-	adminG := engine.Group("/admin")
+	adminG := engine.Group("")
 	{
 		initSession(adminG)
 
-		adminG.Use(middleware.AdminValidate())
+		adminG.Use(middleware.Auth())
 
-		adminG.GET("/", admin.Index)
-		adminG.GET("/login", admin.Login)
-		adminG.POST("/login", admin.Login)
-		adminG.GET("/logout", admin.Logout)
-		adminG.GET("/deny", admin.Deny)
+		adminG.GET("/", api.Index)
+		adminG.GET("/login", api.Login)
+		adminG.POST("/login", api.Login)
+		adminG.GET("/logout", api.Logout)
+		adminG.GET("/deny", api.Deny)
 
-		adminG.GET("/home/welcome", admin.HomeWelcome)
+		adminG.GET("/home/welcome", api.HomeWelcome)
 
-		adminG.GET("/sys/password", admin.SysPassword)
-		adminG.POST("/sys/password", admin.SysPassword)
-		adminG.GET("/sys/master_new", admin.SysMasterNew)
-		adminG.POST("/sys/master_new", admin.SysMasterNew)
-		adminG.GET("/sys/master_list", admin.SysMasterList)
-		adminG.GET("/sys/log_login", admin.SysLogLogin)
+		adminG.GET("/sys/password", api.SysPassword)
+		adminG.POST("/sys/password", api.SysPassword)
+		adminG.GET("/sys/master_new", api.SysMasterNew)
+		adminG.POST("/sys/master_new", api.SysMasterNew)
+		adminG.GET("/sys/master_list", api.SysMasterList)
+		adminG.GET("/sys/log_login", api.SysLogLogin)
 	}
 
 	return engine

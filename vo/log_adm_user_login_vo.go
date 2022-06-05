@@ -1,7 +1,6 @@
 package vo
 
 
-type LogAdmUserLoginVo struct {
-	Id uint32 `form:"id"` //Id
-	Account string `form:"account"` //账号
+type LogAdmUser struct {
+	Account string `form:"account" validate:"min=1"`
 }

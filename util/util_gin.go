@@ -1,10 +1,32 @@
 package util
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 )
+
+
+var validate = validator.New()
+
+// GinBindValid 绑定并验证
+func GinBindValid(ctx *gin.Context, bind interface{}) error {
+	err := ctx.ShouldBind(bind)
+	if err != nil {
+		return err
+	}
+
+	err = validate.Struct(bind)
+
+	if err != nil {
+		errFirst := err.(validator.ValidationErrors)[0]
+		return errors.New(fmt.Sprintf("%s Value:%v", errFirst, errFirst.Value()))
+	}
+
+	return nil
+}
 
 
 // json 返回成功

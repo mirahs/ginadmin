@@ -1,4 +1,4 @@
-package admin
+package api
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,7 +6,6 @@ import (
 )
 
 
-// 欢迎页
 func HomeWelcome(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "welcome")
+	ctx.String(http.StatusOK, "你好")
 }

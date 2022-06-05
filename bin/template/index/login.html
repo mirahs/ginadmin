@@ -72,8 +72,8 @@
                 }
 
                 res = JSON.parse(res);
-                if (res.code === 1) {
-                    location.href = "/admin";
+                if (res.code === 0) {
+                    location.href = "/";
                 } else {
                     layer.alert(res.msg);
                 }

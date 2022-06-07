@@ -15,9 +15,10 @@ golang gin 管理后台模板
 
 ## 启动
 ```shell
-go build ginadmin
-./ginadmin
+# cd bin
+# go build ginadmin
+# ./ginadmin
 ```
 
 ## 访问
-浏览器输入 `http://localhost:8080/admin/index/login`, 后台初始账号密码 `admin/admin`
+浏览器输入 `http://localhost:8080`, 后台初始账号密码 `admin/admin`
